@@ -8,11 +8,11 @@ export const PRODUCTS: Product[] = [
     price: 1.99,
     originalPrice: 39.99,
     currency: 'EUR',
-    image: 'https://storage.googleapis.com/novelec_assets/Pistolet',
+    image: 'https://storage.googleapis.com/novelec_assets/Pistolet.webp',
     gallery: [
-      'https://storage.googleapis.com/novelec_assets/Pistolet',
-      'https://storage.googleapis.com/novelec_assets/Cross%20pistolet',
-      'https://storage.googleapis.com/novelec_assets/Accessoires%20pistolet'
+      'https://storage.googleapis.com/novelec_assets/Pistolet.webp',
+      'https://storage.googleapis.com/novelec_assets/cross%20pistolet.webp',
+      'https://storage.googleapis.com/novelec_assets/Accessoires_parfait.webp'
     ],
     rating: 4.8,
     reviewCount: 124,
@@ -41,10 +41,10 @@ export const PRODUCTS: Product[] = [
     price: 29.99,
     originalPrice: 59.99,
     currency: 'EUR',
-    image: 'https://storage.googleapis.com/novelec_assets/Fusil%20NovElec',
+    image: 'https://storage.googleapis.com/novelec_assets/fusil.webp',
     gallery: [
-      'https://storage.googleapis.com/novelec_assets/Fusil%20NovElec',
-      'https://storage.googleapis.com/novelec_assets/Cross%20Fusil'
+      'https://storage.googleapis.com/novelec_assets/fusil.webp',
+      'https://storage.googleapis.com/novelec_assets/cross_fusil.webp'
     ],
     rating: 4.9,
     reviewCount: 89,
@@ -73,10 +73,10 @@ export const PRODUCTS: Product[] = [
     price: 99.99,
     originalPrice: 199.99,
     currency: 'EUR',
-    image: 'https://storage.googleapis.com/novelec_assets/Gatling',
+    image: 'https://storage.googleapis.com/novelec_assets/gatling.webp',
     gallery: [
-      'https://storage.googleapis.com/novelec_assets/Gatling',
-      'https://storage.googleapis.com/novelec_assets/Accessoire%20Gatling',
+      'https://storage.googleapis.com/novelec_assets/gatling.webp',
+      'https://storage.googleapis.com/novelec_assets/batterie_gatling.webp',
     ],
     rating: 5.0,
     reviewCount: 42,
