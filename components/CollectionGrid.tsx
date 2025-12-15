@@ -5,10 +5,11 @@ import { Product } from '../types';
 interface CollectionGridProps {
   products: Product[];
   onProductSelect: (product: Product) => void;
+  onAddToCart: (product: Product) => void;
   isDarkMode: boolean;
 }
 
-export const CollectionGrid: React.FC<CollectionGridProps> = ({ products, onProductSelect, isDarkMode }) => {
+export const CollectionGrid: React.FC<CollectionGridProps> = ({ products, onProductSelect, onAddToCart, isDarkMode }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -73,14 +74,20 @@ export const CollectionGrid: React.FC<CollectionGridProps> = ({ products, onProd
               {/* ACTION CARDS */}
               <div className="pointer-events-none absolute inset-x-4 bottom-[-12px] z-20 flex justify-between gap-8">
                 <div 
-                    onClick={() => onProductSelect(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onProductSelect(product);
+                    }}
                     className="pointer-events-auto cursor-pointer bg-white/95 backdrop-blur px-4 py-2 rounded-xl shadow-lg border border-black/5 text-[14px] font-black uppercase tracking-widest text-zinc-800 hover:bg-zinc-50 hover:scale-105 active:scale-95 transition-all"
                 >
                   Choisir
                 </div>
 
                 <div 
-                    onClick={() => onProductSelect(product)} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddToCart(product);
+                    }} 
                     className="pointer-events-auto cursor-pointer bg-zinc-900/95 backdrop-blur px-4 py-2 rounded-xl shadow-lg border border-black/10 text-[14px] font-black uppercase tracking-widest text-white hover:bg-black hover:scale-105 active:scale-95 transition-all"
                 >
                   + panier

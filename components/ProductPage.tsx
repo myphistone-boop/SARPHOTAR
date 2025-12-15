@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Product } from '../types';
 import { PRODUCTS, getReviewsForProduct } from '../constants';
 import { Button } from './ui/Button';
+import { StickyBottomBar } from './StickyBottomBar';
 
 interface ProductPageProps {
   product: Product | null;
@@ -339,7 +340,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
         </div>
       </nav>
 
-      <div className="min-h-screen flex flex-col md:flex-row">
+      <div className="min-h-screen flex flex-col md:flex-row pb-24 md:pb-0">
         
         {/* --- SECTION 1: VISUAL (Left Col / Top Mobile) --- */}
         <div className="w-full md:w-1/2 md:h-screen md:fixed md:left-0 md:top-0 bg-surface dark:bg-[#080808] relative flex flex-col pt-24 md:pt-0">
@@ -418,7 +419,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
             {/* 3. PRICE & ACTIONS - Redesigned with Promo */}
             {/* MOVED UP AS REQUESTED */}
-            <div className="bg-surface dark:bg-[#111] p-6 rounded-2xl border border-black/5 dark:border-white/5 mb-10 shadow-xl relative overflow-hidden">
+            <div className="bg-surface dark:bg-[#111] p-6 rounded-2xl border border-black/5 dark:border-white/5 mb-10 shadow-xl relative overflow-hidden hidden md:block">
                 {/* Electric Badge Left (NEW) */}
                 <div className="absolute top-0 left-0 bg-black text-white dark:bg-white dark:text-black text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-br-xl shadow-lg z-10">
                     100% Électrique
@@ -466,6 +467,20 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                         Acheter
                     </Button>
                 </div>
+            </div>
+
+             {/* MOBILE TITLE & PRICE BLOCK */}
+            <div className="md:hidden mb-8">
+                 <h1 className="text-4xl font-black italic uppercase font-display tracking-tighter text-black dark:text-white leading-[0.85] mb-2">
+                    {product.name}
+                 </h1>
+                 <p className="text-xs font-bold text-textMuted dark:text-gray-400 tracking-[0.2em] uppercase pl-1 mb-4">{product.tagline}</p>
+                 <div className="flex items-baseline gap-3">
+                    <span className="text-4xl font-black text-black dark:text-white font-display">{product.price}€</span>
+                    {product.originalPrice && (
+                        <span className="text-lg text-gray-400 line-through decoration-red-500">{product.originalPrice}€</span>
+                    )}
+                 </div>
             </div>
 
             {/* 2. PULSE BARS (Specs) */}
@@ -564,6 +579,10 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
         </div>
       </div>
+      
+      {/* MOBILE STICKY BOTTOM BAR */}
+      <StickyBottomBar product={product} onAddToCart={onAddToCart} onBuyNow={onBuyNow} />
+      
     </div>
   );
 };
