@@ -1,3 +1,4 @@
+
 export interface ProductBullet {
   label: string;
   value: string;
@@ -10,10 +11,11 @@ export interface ProductStory {
 
 export interface Product {
   id: string;
+  lookupKey: string; // New field for Stripe lookup_key
   name: string;
   tagline: string;
   price: number;
-  originalPrice?: number; // New field for strikethrough price
+  originalPrice?: number;
   currency: string;
   image: string;
   gallery: string[]; 
@@ -22,9 +24,9 @@ export interface Product {
   badges: string[];
   bullets: ProductBullet[];
   story: ProductStory;
-  stripeUrl: string;
+  stripeUrl?: string; // Optional/Deprecated
   specs: {
-    range: number; // 0-100 scale for bar
+    range: number;
     rate: number;
     capacity: number;
   };
