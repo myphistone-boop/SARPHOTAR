@@ -18,21 +18,21 @@ const PRODUCTS: ProductCard[] = [
     name: 'NovElec™',
     tagline: 'Electric Series',
     imageSrc: 'https://storage.googleapis.com/novelec_assets/Pistolet',
-    specs: { range: 80, rate: 65, capacity: 70 },
+    specs: { range: 70, rate: 65, capacity: 70 },
   },
   {
     id: '02',
     name: 'PulseX™',
     tagline: 'Power Flow',
     imageSrc: 'https://storage.googleapis.com/novelec_assets/Fusil%20NovElec',
-    specs: { range: 90, rate: 75, capacity: 85 },
+    specs: { range: 80, rate: 75, capacity: 85 },
   },
   {
     id: '03',
     name: 'AquaCore™',
     tagline: 'Impact Line',
     imageSrc: 'https://storage.googleapis.com/novelec_assets/Gatling',
-    specs: { range: 70, rate: 95, capacity: 90 },
+    specs: { range: 90, rate: 95, capacity: 90 },
   },
 ];
 
