@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Pistolets à eau électriques premium NovElec™. Portée 10m+, effets LED, batterie rechargeable. Le futur de la bataille d'eau." />
+    <meta name="theme-color" content="#FFFFFF" />
+    <title>Sarphotar™ | Dominez la nuit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Oswald', 'sans-serif'],
+            },
+            colors: {
+              bg: '#FFFFFF',
+              darkBg: '#050505',
+              surface: '#F5F5F5',
+              darkSurface: '#111111',
+              textMain: '#000000',
+              darkTextMain: '#FFFFFF',
+              textMuted: '#666666',
+              darkTextMuted: '#888888',
+              // Orange removed, replaced by monochrome logic in components
+            },
+            backgroundImage: {
+              'hero-light': 'linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%)',
+              'hero-dark': 'linear-gradient(180deg, #050505 0%, #000000 100%)',
+            },
+            animation: {
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'float': 'float 6s ease-in-out infinite',
+              'energy-flow': 'shimmer 1.5s linear infinite',
+              'fill-bar': 'fill 1.5s ease-out forwards',
+              'spin-slow': 'spin 12s linear infinite',
+              'target-lock': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              shimmer: {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(100%)' }
+              },
+              fill: {
+                '0%': { width: '0%' },
+                '100%': { width: 'var(--target-width)' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      html { scroll-padding-top: 100px; }
+      body {
+        -webkit-tap-highlight-color: transparent;
+        transition: background-color 0.3s, color 0.3s;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body class="bg-bg text-textMain dark:bg-darkBg dark:text-darkTextMain antialiased">
+    <div id="root"></div>
+  </body>
+</html>
