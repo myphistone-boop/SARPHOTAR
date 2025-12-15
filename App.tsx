@@ -176,8 +176,11 @@ function App() {
                 </p>
 
                 <div className="bg-surface dark:bg-white/5 p-4 rounded-xl mb-8 border border-black/5 dark:border-white/5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-textMuted dark:text-gray-400 mb-1">Délai de livraison estimé</p>
-                    <p className="text-xl font-black font-display text-black dark:text-white">12 Jours</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-textMuted dark:text-gray-400 mb-1">Délai de livraison estimé : 12 jours</p>
+                    <p className="text-xl font-black font-display text-black dark:text-white">Un e-mail de confirmation Stripe est envoyé.</p>
+                    <p className="text-xl font-black font-display text-black dark:text-white">Un e-mail de commande sera envoyé dès que le colis est préparé.</p>
+                    <p className="text-xl font-black font-display text-black dark:text-white">Pour toute demande, contactez le support avec votre numéro de facture Stripe.</p>
+                    <p className="text-xl font-black font-display text-black dark:text-white">E-mail du support : sarphotar.pro@gmail.com.</p>
                 </div>
 
                 <Button fullWidth variant="primary" onClick={() => setIsPaymentSuccess(false)} className="bg-black text-white dark:bg-white dark:text-black hover:scale-105 transition-transform shadow-xl">
