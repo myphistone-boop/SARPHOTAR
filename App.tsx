@@ -6,7 +6,6 @@ import { useCart } from './hooks/useCart';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { CollectionGrid } from './components/CollectionGrid';
-import { ComparisonMatrix } from './components/ComparisonMatrix';
 import { ProductPage } from './components/ProductPage'; 
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
@@ -235,10 +234,6 @@ function App() {
                 isDarkMode={isDarkMode}
             />
         </section>
-
-        <div className="w-full">
-           <ComparisonMatrix products={PRODUCTS} />
-        </div>
 
         <div id="specs">
             <TechSpecs />
