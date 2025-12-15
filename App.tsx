@@ -13,18 +13,16 @@ import { TechSpecs } from './components/TechSpecs';
 import { ServiceBar } from './components/ServiceBar';
 import { LegalModal } from './components/LegalModal';
 import { ContactModal } from './components/ContactModal';
-import { AdminInit } from './components/AdminInit';
 
 function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product>(PRODUCTS[0]);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
   const [legalSection, setLegalSection] = useState<'privacy' | 'terms' | 'policies' | null>(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   
-  const { addToCart, count } = useCart();
+  const { addToCart, count, cart } = useCart();
   
   const shopSectionRef = useRef<HTMLDivElement>(null);
 
@@ -37,76 +35,94 @@ function App() {
     }
   }, [isDarkMode]);
 
-  // Check for admin flag in URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('admin') === 'true') {
-        setIsAdminOpen(true);
-    }
-  }, []);
-
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
 
   const scrollToShop = () => {
     if (!shopSectionRef.current) return;
+
     const yOffset = window.innerWidth < 768 ? 60 : 96;
-    const y = shopSectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+    const y =
+      shopSectionRef.current.getBoundingClientRect().top +
+      window.pageYOffset +
+      yOffset;
+
     window.scrollTo({ top: y, behavior: 'smooth' });
   };
+
 
   const handleProductSelectFromHeader = (product: Product) => {
     setSelectedProduct(product);
     setViewProduct(product);
   };
 
-  // --- NEW: STRIPE CHECKOUT LOGIC ---
-  const handleBuyNow = async (product: Product) => {
-    if (isCheckingOut) return;
+  // Generic Checkout Handler calling the Backend API
+  const processCheckout = async (items: { key: string, quantity: number }[]) => {
     setIsCheckingOut(true);
-
     try {
-        const response = await fetch('/api/create-checkout-session', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ offerKey: product.lookupKey }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.url) {
-            window.location.href = data.url;
-        } else {
-            console.error('Checkout failed:', data.error);
-            alert('Erreur lors de l\'initialisation du paiement. Veuillez réessayer.');
-            setIsCheckingOut(false);
-        }
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error('Checkout error:', data.error);
+        alert('Erreur lors de l\'initialisation du paiement. Veuillez réessayer.');
+      }
     } catch (error) {
-        console.error('Network error:', error);
-        alert('Erreur de connexion.');
-        setIsCheckingOut(false);
+      console.error('Network error:', error);
+      alert('Une erreur est survenue.');
+    } finally {
+      setIsCheckingOut(false);
     }
+  };
+
+  // Buy Now: Immediate checkout for single product
+  const handleBuyNow = (product: Product) => {
+    processCheckout([{ key: product.id, quantity: 1 }]);
+  };
+
+  // Cart Checkout: Checkout all items in cart
+  const handleCartClick = () => {
+    if (count === 0) {
+      alert("Votre panier est vide.");
+      return;
+    }
+    
+    // Map CartItems to simple API payload
+    const checkoutItems = cart.map(item => ({
+      key: item.id,
+      quantity: item.quantity
+    }));
+    
+    processCheckout(checkoutItems);
   };
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'selection:bg-white selection:text-black' : 'selection:bg-black selection:text-white'}`}>
       
-      {/* LOADING OVERLAY FOR CHECKOUT */}
+      {/* Loading Overlay for Checkout */}
       {isCheckingOut && (
-          <div className="fixed inset-0 z-[999] bg-black/50 backdrop-blur-sm flex items-center justify-center">
-              <div className="flex flex-col items-center gap-4">
-                  <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
-                  <span className="text-white font-bold uppercase tracking-widest">Redirection Stripe...</span>
-              </div>
+        <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+             <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+             <div className="text-white font-bold uppercase tracking-widest text-sm animate-pulse">Redirection Stripe...</div>
           </div>
+        </div>
       )}
 
       <Header 
         cartCount={count} 
-        onCartClick={() => alert('Panier ouvert')} 
+        onCartClick={handleCartClick} 
         isDarkMode={isDarkMode}
         onToggleTheme={toggleTheme}
         products={PRODUCTS}
@@ -158,8 +174,6 @@ function App() {
         onOpenLegal={(section) => setLegalSection(section)} 
         onOpenContact={() => setIsContactOpen(true)}
         onScrollToCollection={scrollToShop}
-        // Hidden trigger for admin
-        onSecretAction={() => setIsAdminOpen(true)}
       />
 
       <ProductPage 
@@ -182,10 +196,6 @@ function App() {
         isOpen={isContactOpen} 
         onClose={() => setIsContactOpen(false)} 
       />
-
-      {isAdminOpen && (
-        <AdminInit onClose={() => setIsAdminOpen(false)} />
-      )}
     </div>
   );
 }

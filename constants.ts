@@ -1,10 +1,8 @@
-
 import { Product } from './types';
 
 export const PRODUCTS: Product[] = [
   {
     id: 'novelec-pistol',
-    lookupKey: 'novelec-pistol',
     name: 'Pistolet NovElec™',
     tagline: '100% Électrique',
     price: 19.99,
@@ -29,6 +27,7 @@ export const PRODUCTS: Product[] = [
       line1: 'La puissance électrique. Le style. La nuit.',
       line2: 'Un jet précis, des effets lumineux, et zéro effort.',
     },
+    stripeUrl: 'https://buy.stripe.com/test_1',
     specs: {
       range: 70,
       rate: 60,
@@ -37,7 +36,6 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'ciovelec-rifle',
-    lookupKey: 'ciovelec-rifle',
     name: 'Fusil CiovElec™',
     tagline: 'L\'Avantage Tactique',
     price: 29.99,
@@ -61,6 +59,7 @@ export const PRODUCTS: Product[] = [
       line1: 'Le format fusil. L’avantage à mi-distance.',
       line2: 'Plus de contrôle, plus d’impact, plus de fun.',
     },
+    stripeUrl: 'https://buy.stripe.com/test_2',
     specs: {
       range: 90,
       rate: 75,
@@ -69,7 +68,6 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'novelec-gatling',
-    lookupKey: 'novelec-gatling',
     name: 'Gatling NovElec™',
     tagline: 'Domination Totale',
     price: 99.99,
@@ -93,6 +91,7 @@ export const PRODUCTS: Product[] = [
       line1: 'Rafales électriques. Signature RGB.',
       line2: 'Le mode “boss final” des batailles aquatiques.',
     },
+    stripeUrl: 'https://buy.stripe.com/test_3',
     specs: {
       range: 60,
       rate: 100,
@@ -140,7 +139,7 @@ const REVIEW_CONTENTS = [
   "Franchement surpris par la puissance. Ça part loin et droit.",
   "L'autonomie est correcte, on tient l'aprem tranquille. Le chargement USB est pratique.",
   "Le look est vraiment badass, surtout la nuit avec les LEDs.",
-  "Un peu cher mais la qualité du plastique est là. C'est du solide.",
+  "Un peu cher mais la qualité est là. C'est du solide.",
   "Service client au top, j'avais une question sur la batterie, réponse en 1h.",
   "Le débit est impressionnant, mes neveux étaient ravis.",
   "Attention ça mouille fort ! Parfait pour les grosses chaleurs.",
@@ -154,6 +153,8 @@ const REVIEW_CONTENTS = [
   "On a pris le pack duo, aucun regret."
 ];
 
+// Pseudo-random generator to ensure deterministic reviews per product
+// This allows us to have different reviews for different products, but they stay the same for a specific product
 const mulberry32 = (a: number) => {
     return function() {
       var t = a += 0x6D2B79F5;
@@ -174,7 +175,7 @@ const stringToHash = (str: string) => {
 }
 
 export const getReviewsForProduct = (productId: string, count: number, offset: number) => {
-    const seed = stringToHash(productId) + offset + 123;
+    const seed = stringToHash(productId) + offset + 123; // Base seed + offset
     const random = mulberry32(seed);
 
     return Array.from({ length: count }).map((_, i) => {
@@ -182,14 +183,14 @@ export const getReviewsForProduct = (productId: string, count: number, offset: n
         const contentIndex = Math.floor(random() * REVIEW_CONTENTS.length);
         
         const ratingRoll = random();
-        const rating = ratingRoll > 0.1 ? 5 : 4; 
+        const rating = ratingRoll > 0.1 ? 5 : 4; // 90% 5 stars, 10% 4 stars
         
         const daysAgo = Math.floor(random() * 45) + 2;
         
         return {
             id: `${productId}-review-${offset + i}`,
             name: REVIEW_NAMES[nameIndex],
-            verified: random() > 0.2, 
+            verified: random() > 0.2, // 80% verified
             rating: rating,
             date: `Il y a ${daysAgo} jours`,
             content: REVIEW_CONTENTS[contentIndex]
