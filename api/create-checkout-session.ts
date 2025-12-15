@@ -21,6 +21,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'No items provided' });
     }
 
+    // CONFIGURATION DOMAINE
+    // Utilise la variable d'env si elle existe (pour le dev local http://localhost:3000), 
+    // sinon force votre domaine de production.
+    const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarphotar.fr';
+
     // 1. Génération du numéro de commande interne
     // Format: SAR-YYYYMMDD-XXXX
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -80,7 +85,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // --- Customisation UX ---
       custom_text: {
         shipping_address: {
-          message: process.env.DELIVERY_DELAY_TEXT || 'Livraison estimée sous 3 à 5 jours ouvrés'
+          message: process.env.DELIVERY_DELAY_TEXT || 'Livraison packée sous 1 à 2 jours ouvrés'
         },
         submit: {
             message: 'Payer et Commander'
@@ -88,9 +93,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
 
       // --- Redirections ---
-      // Redirection vers l'accueil avec paramètre de succès pour déclencher la notification
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/?payment_success=true&session_id={CHECKOUT_SESSION_ID}&order=${orderNumber}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
+      // Succès : Retour accueil avec modale de confirmation
+      success_url: `${BASE_URL}/?payment_success=true&session_id={CHECKOUT_SESSION_ID}&order=${orderNumber}`,
+      // Annulation : Retour accueil simple (évite une 404 sur /cancel)
+      cancel_url: `${BASE_URL}/`,
     });
 
     return res.status(200).json({ url: session.url });
