@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Product, CartItem } from '../types';
 
@@ -38,6 +39,11 @@ export const useCart = () => {
     setCart(prev => prev.filter(item => item.id !== id));
   };
 
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem('novelec_cart');
+  };
+
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -45,6 +51,7 @@ export const useCart = () => {
     cart,
     addToCart,
     removeFromCart,
+    clearCart,
     total,
     count,
     isCartOpen,
