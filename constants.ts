@@ -2,7 +2,7 @@ import { Product } from './types';
 
 export const PRODUCTS: Product[] = [
   {
-    id: 'novelec-pistol',
+    id: 'pistol-novelec',
     name: 'Pistolet NovElec™',
     tagline: '100% Électrique',
     price: 19.99,
