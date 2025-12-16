@@ -3,7 +3,7 @@ export const STRIPE_API_VERSION = "2023-10-16";
 
 export const OFFERS = [
   {
-    key: "novelec-pistol",
+    key: "pistol-novelec",
     name: "Pistolet NovElec™",
     description: "100% Électrique - Portée 10m",
     amount: 1999, // 19.99€

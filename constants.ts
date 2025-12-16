@@ -5,7 +5,7 @@ export const PRODUCTS: Product[] = [
     id: 'novelec-pistol',
     name: 'Pistolet NovElec™',
     tagline: '100% Électrique',
-    price: 1.99,
+    price: 19.99,
     originalPrice: 39.99,
     currency: 'EUR',
     image: 'https://storage.googleapis.com/novelec_assets/Pistolet.webp',
