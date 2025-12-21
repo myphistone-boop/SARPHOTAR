@@ -547,9 +547,14 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                             <div className="mb-3">
                                 {renderStars(review.rating)}
                             </div>
-                            <p className="text-sm text-textMuted dark:text-gray-300 leading-relaxed">
+                            <p className="text-sm text-textMuted dark:text-gray-300 leading-relaxed mb-4">
                                 "{review.content}"
                             </p>
+                            {review.image && (
+                                <div className="mt-4 rounded-xl overflow-hidden border border-black/10 dark:border-white/10 max-w-[200px]">
+                                    <img src={review.image} alt="User Review" className="w-full h-auto object-cover" />
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>

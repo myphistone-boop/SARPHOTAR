@@ -35,7 +35,6 @@ export const PRODUCTS: Product[] = [
       capacity: 50,
     }
   },
-  // ... (les autres produits restent inchangés tant que leurs IDs matchent api/stripe-config.ts)
   {
     id: 'ciovelec-rifle',
     name: 'Fusil CiovElec™',
@@ -124,6 +123,50 @@ export const FAQ_ITEMS = [
 // --- DYNAMIC REVIEWS SYSTEM ---
 const REVIEW_NAMES = ["Karim B.", "Sophie L.", "Mehdi K.", "Camille D.", "Yassine A.", "Thomas M.", "Léa P.", "Mohamed S.", "Sarah J.", "Nicolas F.", "Amira H.", "Lucas R.", "Inès B.", "Hugo T.", "Manon G.", "Kevin L.", "Julie C.", "Antoine D.", "Clara M.", "Alexandre V.", "Fatima Z.", "Pierre H.", "Emma R.", "David L.", "Alice N.", "Enzo P.", "Jade M.", "Louis B.", "Chloé S.", "Gabriel L."];
 const REVIEW_CONTENTS = ["Absolument dingue. La pression est constante, rien à voir avec les pistolets manuels. Les soirées d'été ont changé de niveau.", "Design futuriste incroyable. Mon fils (et mon mari) ne le lâchent plus. La batterie tient vraiment longtemps.", "Portée impressionnante pour un jouet électrique. Le réservoir se vide vite si on bourrine, mais c'est le jeu !", "Reçu super vite. La qualité du plastique est top, ça fait pas cheap du tout. Je recommande le Gatling pour le show !", "Meilleur achat de l'été. On a fait une bataille à 10 personnes, les NovElec™ ont dominé.", "Franchement surpris par la puissance. Ça part loin et droit.", "L'autonomie est correcte, on tient l'aprem tranquille. Le chargement USB est pratique.", "Le look est vraiment badass, surtout la nuit avec les LEDs.", "Un peu cher mais la qualité est là. C'est du solide.", "Service client au top, j'avais une question sur la batterie, réponse en 1h.", "Le débit est impressionnant, mes neveux étaient ravis.", "Attention ça mouille fort ! Parfait pour les grosses chaleurs.", "Ergonomie parfaite, même pour des mains d'adultes.", "Le réservoir additionnel est un must-have.", "Je ne regrette pas mon achat, on s'éclate avec les voisins.", "Livraison soignée, produit conforme à la description.", "La précision est bluffante pour un pistolet à eau.", "J'adore le bruit du moteur, ça fait très futuriste.", "Simple à remplir, pas de fuite, c'est propre.", "On a pris le pack duo, aucun regret."];
+
+// Images spécifiques pour le Pistolet
+const PISTOLET_REVIEW_IMAGES = [
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%208.webp", // En premier comme demandé
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%201.webp",
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%202.webp",
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%203.webp",
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%204.webp",
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%205.webp",
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%206.webp",
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%207.webp",
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%209.webp",
+  "https://storage.googleapis.com/novelec_assets/Pistolet%20avis%2010.webp",
+];
+
 const mulberry32 = (a: number) => { return function() { var t = a += 0x6D2B79F5; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; } }
 const stringToHash = (str: string) => { let hash = 0; for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash = hash & hash; } return Math.abs(hash); }
-export const getReviewsForProduct = (productId: string, count: number, offset: number) => { const seed = stringToHash(productId) + offset + 123; const random = mulberry32(seed); return Array.from({ length: count }).map((_, i) => { const nameIndex = Math.floor(random() * REVIEW_NAMES.length); const contentIndex = Math.floor(random() * REVIEW_CONTENTS.length); const ratingRoll = random(); const rating = ratingRoll > 0.1 ? 5 : 4; const daysAgo = Math.floor(random() * 45) + 2; return { id: `${productId}-review-${offset + i}`, name: REVIEW_NAMES[nameIndex], verified: random() > 0.2, rating: rating, date: `Il y a ${daysAgo} jours`, content: REVIEW_CONTENTS[contentIndex] }; }); };
+
+export const getReviewsForProduct = (productId: string, count: number, offset: number) => { 
+  const seed = stringToHash(productId) + offset + 123; 
+  const random = mulberry32(seed); 
+  
+  return Array.from({ length: count }).map((_, i) => { 
+    const globalIndex = offset + i;
+    const nameIndex = Math.floor(random() * REVIEW_NAMES.length); 
+    const contentIndex = Math.floor(random() * REVIEW_CONTENTS.length); 
+    const ratingRoll = random(); 
+    const rating = ratingRoll > 0.1 ? 5 : 4; 
+    const daysAgo = Math.floor(random() * 45) + 2; 
+
+    // Injection d'images pour le pistolet
+    let image = undefined;
+    if (productId === 'pistol-novelec' && globalIndex < 10) {
+      image = PISTOLET_REVIEW_IMAGES[globalIndex];
+    }
+
+    return { 
+      id: `${productId}-review-${globalIndex}`, 
+      name: REVIEW_NAMES[nameIndex], 
+      verified: random() > 0.2, 
+      rating: rating, 
+      date: `Il y a ${daysAgo} jours`, 
+      content: REVIEW_CONTENTS[contentIndex],
+      image: image
+    }; 
+  }); 
+};
