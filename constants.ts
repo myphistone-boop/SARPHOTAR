@@ -3,7 +3,7 @@ import { Product } from './types';
 
 export const PRODUCTS: Product[] = [
   {
-    id: 'novelec-pistol', // <--- CET ID DOIT ÊTRE IDENTIQUE À LA "KEY" DANS api/stripe-config.ts
+    id: 'pistol-novelec', // <--- CET ID DOIT ÊTRE IDENTIQUE À LA "KEY" DANS api/stripe-config.ts
     name: 'Pistolet NovElec™',
     tagline: '100% Électrique',
     price: 19.99,
