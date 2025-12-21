@@ -83,7 +83,7 @@ async function sendConfirmationEmail(
       </div>
 
       <div style="background-color: #000; color: #fff; padding: 15px; text-align: center; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
-        Nous vous contacterons dès l'expédition du colis
+        Nous vous contacterons dès que le colis est pris en charge par un transporteur
       </div>
       
       <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
