@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Product } from '../types';
 import { PRODUCTS, getReviewsForProduct } from '../constants';
 import { Button } from './ui/Button';
-import { StickyBottomBar } from './StickyBottomBar';
 
 interface ProductPageProps {
   product: Product | null;
@@ -65,7 +64,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
     if (product) {
       document.body.style.overflow = 'hidden';
       
-      // Determine if this is an "Open" action or a "Switch" action
       const isSwitching = isOpenRef.current;
       isOpenRef.current = true;
 
@@ -75,12 +73,10 @@ export const ProductPage: React.FC<ProductPageProps> = ({
       setReviewsLoadCount(0);
       window.scrollTo(0, 0);
 
-      // Trigger Visual Effect (Flash/Scan)
-      // If opening (slide up), delay effect so it's visible. If switching, instant.
       const effectDelay = isSwitching ? 0 : 400; 
       
       const tStart = setTimeout(() => setTriggerEffect(true), effectDelay);
-      const tEnd = setTimeout(() => setTriggerEffect(false), effectDelay + 500); // 500ms effect duration
+      const tEnd = setTimeout(() => setTriggerEffect(false), effectDelay + 500); 
 
       return () => { 
         document.body.style.overflow = ''; 
@@ -93,7 +89,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
       setTriggerEffect(false);
       isOpenRef.current = false;
     }
-  }, [product?.id]); // Trigger on ID change
+  }, [product?.id]);
 
   if (!product) return null;
 
@@ -117,12 +113,10 @@ export const ProductPage: React.FC<ProductPageProps> = ({
     setReviewsLoadCount(prev => prev + 1);
   };
 
-  // Render Segmented Bar Function
   const renderSegmentedBar = (label: string, value: number, type: 'range' | 'rate' | 'capacity') => {
     const segments = 24; 
     const filledSegments = Math.floor((value / 100) * segments);
 
-    // Dynamic color for Range based on Dark Mode
     const rangeStart = isDarkMode ? '#FFFFFF' : '#000000';
     const rangeEnd = isDarkMode ? '#AAAAAA' : '#444444';
 
@@ -132,7 +126,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
         capacity: { start: '#00E5FF', end: '#2979FF' }
     }[type];
 
-    // Using product.id in key forces the component to remount and replay entry animation
     return (
         <div key={product.id + label} className="w-full mb-2 bg-surface dark:bg-[#111] p-3 rounded-lg border border-black/5 dark:border-white/5">
             <div className="flex justify-between items-end mb-2 px-[1px]">
@@ -142,26 +135,22 @@ export const ProductPage: React.FC<ProductPageProps> = ({
             <div className="flex gap-[2px] w-full h-[6px] md:h-[8px]">
                 {Array.from({ length: segments }).map((_, i) => {
                     const isFilled = i < filledSegments;
-                    
                     const factor = filledSegments > 1 ? i / (filledSegments - 1) : 0;
                     const colorObj = isFilled 
                         ? interpolateColorObj(gradientConfig.start, gradientConfig.end, factor) 
                         : { r: 0, g: 0, b: 0 };
 
-                    // Animation Timings
-                    const stagger = i * 15; // 15ms stagger per bar for wave effect
-                    const entryDuration = 400; // 400ms entry time
-                    const pulseDelay = stagger + entryDuration; // Pulse starts after entry finishes
+                    const stagger = i * 15;
+                    const entryDuration = 400;
+                    const pulseDelay = stagger + entryDuration;
 
                     const style = (isFilled ? {
                         '--r': colorObj.r,
                         '--g': colorObj.g,
                         '--b': colorObj.b,
                         backgroundColor: `rgb(${colorObj.r}, ${colorObj.g}, ${colorObj.b})`,
-                        // Chain: Entry Animation -> Infinite Pulse
                         animation: `barEntry ${entryDuration}ms cubic-bezier(0.16, 1, 0.3, 1) ${stagger}ms backwards, strongPulsePage 2s ease-in-out infinite ${pulseDelay}ms`,
                     } : {
-                        // Empty bars also animate in
                         animation: `barEntry ${entryDuration}ms cubic-bezier(0.16, 1, 0.3, 1) ${stagger}ms backwards`,
                     }) as React.CSSProperties;
 
@@ -222,17 +211,11 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   return (
     <div className={`fixed inset-0 z-[60] bg-bg dark:bg-darkBg overflow-y-auto overflow-x-hidden transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
       
-      {/* --- NON-BLOCKING TECH OVERLAY --- */}
       {triggerEffect && (
         <div className="fixed inset-0 z-[100] pointer-events-none overflow-hidden">
-            {/* 1. Instant Flash */}
             <div className="absolute inset-0 bg-white/20 dark:bg-white/10 animate-flash-fade mix-blend-overlay"></div>
-            
-            {/* 2. Scanning Line */}
             <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-transparent to-black/30 dark:to-white/30 animate-scan-fast opacity-50"></div>
             <div className="absolute top-0 left-0 w-full h-[2px] bg-black/80 dark:bg-white/80 shadow-[0_0_20px_black] dark:shadow-[0_0_20px_white] animate-scan-fast"></div>
-            
-            {/* Corner Markers */}
             <div className="absolute top-0 left-0 w-16 h-16 border-l-2 border-t-2 border-black/50 dark:border-white/50"></div>
             <div className="absolute bottom-0 right-0 w-16 h-16 border-r-2 border-b-2 border-black/50 dark:border-white/50"></div>
         </div>
@@ -259,11 +242,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
         }
       `}</style>
 
-
-      {/* --- STICKY NAVIGATION HEADER --- */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 py-4 flex justify-between items-start pointer-events-none">
-        
-        {/* CLOSE BUTTON */}
         <button 
           onClick={onClose}
           className="pointer-events-auto group flex items-center gap-2 bg-white/80 dark:bg-black/80 backdrop-blur-md px-3 py-2 md:px-4 rounded-full border border-black/10 dark:border-white/10 hover:border-black dark:hover:border-white transition-all shadow-lg"
@@ -274,9 +253,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
           <span className="text-xs font-black uppercase tracking-widest text-black dark:text-white hidden sm:block">Fermer</span>
         </button>
 
-        {/* RIGHT ACTIONS: Theme + ARSENAL */}
         <div className="flex items-center gap-2 pointer-events-auto">
-            {/* THEME TOGGLE */}
             <button 
                 onClick={onToggleTheme}
                 className="bg-white/90 dark:bg-[#111]/90 backdrop-blur-md p-2.5 md:p-3 rounded-full border border-black/10 dark:border-white/10 shadow-2xl hover:bg-white dark:hover:bg-[#222] transition-all group text-black dark:text-white hover:text-black dark:hover:text-white"
@@ -289,7 +266,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                 )}
             </button>
 
-            {/* ARSENAL SELECTOR (Dropdown) */}
             <div className="relative">
                 <button 
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -307,7 +283,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     </svg>
                 </button>
 
-                {/* Dropdown Menu */}
                 {isDropdownOpen && (
                     <div className="absolute top-full right-0 mt-2 w-72 md:w-96 bg-white dark:bg-[#111] rounded-xl border border-black/10 dark:border-white/10 shadow-2xl overflow-hidden animate-float-up z-50">
                     <div className="p-2 space-y-1">
@@ -340,29 +315,23 @@ export const ProductPage: React.FC<ProductPageProps> = ({
         </div>
       </nav>
 
-      <div className="min-h-screen flex flex-col md:flex-row pb-24 md:pb-0">
+      <div className="min-h-screen flex flex-col md:flex-row">
         
-        {/* --- SECTION 1: VISUAL (Left Col / Top Mobile) --- */}
         <div className="w-full md:w-1/2 md:h-screen md:fixed md:left-0 md:top-0 bg-surface dark:bg-[#080808] relative flex flex-col pt-24 md:pt-0">
-           {/* Background Grid */}
            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
                 style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
            </div>
            
-           {/* Main Carousel Area */}
            <div className="flex-1 relative flex items-center justify-center overflow-hidden">
-                
-                {/* Image - WITH GLITCH ANIMATION ON TRIGGER */}
                 <div className={`relative w-full h-[350px] md:h-full max-h-[70vh] flex items-center justify-center p-8 transition-all duration-500 ${triggerEffect ? 'animate-glitch-quick' : ''}`}>
                     <img 
-                        key={currentImageIndex} // Key forces animation reset on change
+                        key={currentImageIndex} 
                         src={product.gallery[currentImageIndex]} 
                         alt={`${product.name} view ${currentImageIndex + 1}`} 
                         className="w-full h-full object-contain rounded-3xl mix-blend-multiply dark:mix-blend-normal [filter:drop-shadow(0_20px_50px_rgba(0,0,0,0.3))] animate-float z-10"
                     />
                 </div>
 
-                {/* Carousel Controls */}
                 <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 pointer-events-none">
                     <button 
                         onClick={prevImage}
@@ -378,7 +347,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     </button>
                 </div>
 
-                {/* Dots Pagination */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                     {product.gallery.map((_, idx) => (
                         <button
@@ -389,7 +357,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     ))}
                 </div>
            </div>
-           {/* Add Quick Glitch Keyframes */}
            <style>{`
                 @keyframes glitch-quick {
                     0% { transform: translate(0); }
@@ -405,11 +372,8 @@ export const ProductPage: React.FC<ProductPageProps> = ({
            `}</style>
         </div>
 
-
-        {/* --- SECTION 2: CONTENT SCROLL (Right Col / Bottom Mobile) --- */}
         <div className="w-full md:w-1/2 ml-auto relative bg-bg dark:bg-darkBg p-6 md:p-20 md:pt-32 pb-32">
             
-            {/* 1. PC TITLE DISPLAY (Requested) */}
             <div className="hidden md:block mb-8 animate-float-up" style={{ animationDelay: '100ms' }}>
                  <h1 className="text-5xl lg:text-6xl font-black italic uppercase font-display tracking-tighter text-black dark:text-white leading-[0.85] mb-2">
                     {product.name}
@@ -417,15 +381,11 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                  <p className="text-sm font-bold text-black dark:text-white tracking-[0.2em] uppercase pl-1">{product.tagline}</p>
             </div>
 
-            {/* 3. PRICE & ACTIONS - Redesigned with Promo */}
-            {/* MOVED UP AS REQUESTED */}
             <div className="bg-surface dark:bg-[#111] p-6 rounded-2xl border border-black/5 dark:border-white/5 mb-10 shadow-xl relative overflow-hidden hidden md:block">
-                {/* Electric Badge Left (NEW) */}
                 <div className="absolute top-0 left-0 bg-black text-white dark:bg-white dark:text-black text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-br-xl shadow-lg z-10">
                     100% Électrique
                 </div>
 
-                {/* Promo Badge Right - UPDATED FOR VISIBILITY & PULSE */}
                 <div className="absolute top-0 right-0 z-20">
                     <div className="relative bg-gradient-to-bl from-red-600 to-red-500 text-white text-xs md:text-sm font-black uppercase tracking-widest px-6 py-3 rounded-bl-3xl shadow-[0_5px_25px_rgba(220,38,38,0.5)] flex items-center gap-3"
                          style={{ animation: 'holidayPulse 2s ease-in-out infinite' }}>
@@ -469,28 +429,54 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                 </div>
             </div>
 
-             {/* MOBILE TITLE & PRICE BLOCK */}
-            <div className="md:hidden mb-8">
-                 <h1 className="text-4xl font-black italic uppercase font-display tracking-tighter text-black dark:text-white leading-[0.85] mb-2">
-                    {product.name}
-                 </h1>
-                 <p className="text-xs font-bold text-textMuted dark:text-gray-400 tracking-[0.2em] uppercase pl-1 mb-4">{product.tagline}</p>
-                 <div className="flex items-baseline gap-3">
-                    <span className="text-4xl font-black text-black dark:text-white font-display">{product.price}€</span>
-                    {product.originalPrice && (
-                        <span className="text-lg text-gray-400 line-through decoration-red-500">{product.originalPrice}€</span>
-                    )}
+            {/* MOBILE ONLY: TITLE + ACTION BAR + SPECS */}
+            <div className="md:hidden">
+                 <div className="mb-4">
+                    <h1 className="text-4xl font-black italic uppercase font-display tracking-tighter text-black dark:text-white leading-[0.85] mb-2">
+                        {product.name}
+                    </h1>
+                    <p className="text-xs font-bold text-textMuted dark:text-gray-400 tracking-[0.2em] uppercase pl-1">{product.tagline}</p>
+                 </div>
+
+                 {/* ACTION BAR SLIM (Large et fine, insérée ici) */}
+                 <div className="bg-surface/80 dark:bg-[#111]/90 backdrop-blur-md p-4 rounded-xl border border-black/5 dark:border-white/10 mb-8 shadow-md">
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="flex flex-col shrink-0">
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-2xl font-black text-black dark:text-white font-display leading-none">{product.price}€</span>
+                                {product.originalPrice && (
+                                    <span className="text-sm text-gray-400 line-through decoration-red-500 font-bold">{product.originalPrice}€</span>
+                                )}
+                            </div>
+                            <span className="text-[9px] font-black uppercase text-red-500 tracking-wider">OFFRE NOËL -50%</span>
+                        </div>
+                        
+                        <div className="flex-1 grid grid-cols-[1fr_2fr] gap-2">
+                            <Button 
+                                variant="outline" 
+                                onClick={() => onAddToCart(product)}
+                                className="!text-[10px] !py-3 !px-2 !min-h-0 border-black/10 dark:border-white/10"
+                            >
+                                Panier
+                            </Button>
+                            <Button 
+                                variant="primary" 
+                                onClick={() => onBuyNow(product)}
+                                className="!text-xs !py-3 !px-2 !min-h-0 bg-black text-white dark:bg-white dark:text-black"
+                            >
+                                Acheter
+                            </Button>
+                        </div>
+                    </div>
                  </div>
             </div>
 
-            {/* 2. PULSE BARS (Specs) */}
             <div className="mb-10">
                  {renderSegmentedBar("PORTÉE", product.specs.range, 'range')}
                  {renderSegmentedBar("CADENCE", product.specs.rate, 'rate')}
                  {renderSegmentedBar("CAPACITÉ", product.specs.capacity, 'capacity')}
             </div>
 
-            {/* 4. RATING / AVIS SUMMARY */}
             <div className="flex items-center gap-4 mb-10 px-2">
                 <div className="flex flex-col">
                     <div className="flex items-center gap-2 mb-1">
@@ -510,7 +496,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                 </div>
             </div>
 
-            {/* 5. DESCRIPTION */}
             <div className="mb-12">
                 <h3 className="text-sm font-black uppercase tracking-widest text-textMuted dark:text-darkTextMuted mb-4 flex items-center gap-2">
                     <span className="w-8 h-[2px] bg-black dark:bg-white"></span>
@@ -523,7 +508,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     {product.story.line2} Conçu avec des polymères haute densité et une électronique étanche, c'est l'outil ultime pour dominer l'été.
                 </p>
                 
-                {/* Tech Bullets Inline - UPDATED GRID TO 2 Cols on mobile, 2 on desktop (looks better with 4 items than 3) */}
                 <div className="grid grid-cols-2 gap-3">
                     {product.bullets.map((bullet, i) => (
                         <div key={i} className="bg-white dark:bg-white/5 p-3 rounded border border-black/5 dark:border-white/5">
@@ -534,7 +518,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                 </div>
             </div>
 
-            {/* 6. AVIS CLIENTS DYNAMIQUES */}
             <div ref={reviewsRef} className="border-t border-black/5 dark:border-white/5 pt-10">
                 <h3 className="text-2xl font-black italic uppercase font-display text-black dark:text-white mb-8">
                     Field Reports <span className="text-black dark:text-white text-lg not-italic align-middle ml-2">({product.reviewCount})</span>
@@ -576,13 +559,8 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     )}
                 </div>
             </div>
-
         </div>
       </div>
-      
-      {/* MOBILE STICKY BOTTOM BAR */}
-      <StickyBottomBar product={product} onAddToCart={onAddToCart} onBuyNow={onBuyNow} />
-      
     </div>
   );
 };
