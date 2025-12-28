@@ -33,6 +33,21 @@ function App() {
   
   const shopSectionRef = useRef<HTMLDivElement>(null);
 
+  // Auto-scroll to Arsenal on mount
+  useEffect(() => {
+    const scrollToArsenal = () => {
+      if (shopSectionRef.current) {
+        const yOffset = window.innerWidth < 768 ? 60 : 96;
+        const y = shopSectionRef.current.getBoundingClientRect().top + window.pageYOffset - yOffset;
+        window.scrollTo({ top: y, behavior: 'instant' });
+      }
+    };
+
+    // Small delay to ensure the DOM is ready and the browser doesn't fight with the initial scroll restoration
+    const timer = setTimeout(scrollToArsenal, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Apply dark mode class to html element
   useEffect(() => {
     if (isDarkMode) {
@@ -64,7 +79,7 @@ function App() {
 
     const y =
       shopSectionRef.current.getBoundingClientRect().top +
-      window.pageYOffset +
+      window.pageYOffset -
       yOffset;
 
     window.scrollTo({ top: y, behavior: 'smooth' });
