@@ -57,6 +57,17 @@ function App() {
     }
   }, [isDarkMode]);
 
+  // Handle Referrer Tracking from URL
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const refParam = query.get('ref');
+
+    // Store referrer in localStorage if present (last-touch attribution)
+    if (refParam) {
+      localStorage.setItem('referrer', refParam);
+    }
+  }, []);
+
   // Handle Payment Success from URL
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
@@ -105,16 +116,19 @@ function App() {
   const processCheckout = async (items: { key: string, quantity: number }[]) => {
     setIsCheckingOut(true);
     try {
+      // Retrieve referrer from localStorage (defaults to 'direct' if not found)
+      const referrer = localStorage.getItem('referrer') || 'direct';
+
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items, referrer }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.url) {
         window.location.href = data.url;
       } else {

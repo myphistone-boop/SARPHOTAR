@@ -13,13 +13,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { items } = req.body as {
+    const { items, referrer } = req.body as {
       items: { key: string; quantity: number }[];
+      referrer?: string;
     };
 
     if (!items || items.length === 0) {
       return res.status(400).json({ error: 'No items provided' });
     }
+
+    // Referrer tracking: defaults to 'direct' if not provided
+    const customerReferrer = referrer || 'direct';
 
     // CONFIGURATION DOMAINE
     // Utilise la variable d'env si elle existe (pour le dev local http://localhost:3000), 
@@ -65,11 +69,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       client_reference_id: orderNumber,
       metadata: {
         orderNumber: orderNumber,
-        source: 'sarphotar_web'
+        source: 'sarphotar_web',
+        referrer: customerReferrer
       },
       payment_intent_data: {
         metadata: {
-          orderNumber: orderNumber
+          orderNumber: orderNumber,
+          referrer: customerReferrer
         }
       },
 
