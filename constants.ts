@@ -7,7 +7,7 @@ export const PRODUCTS: Product[] = [
     name: 'Pistolet NovElec™',
     tagline: '100% Électrique',
     price: 19.99,
-    originalPrice: 39.99,
+    originalPrice: 49.99,
     currency: 'EUR',
     image: 'https://storage.googleapis.com/novelec_assets/Pistolet.webp',
     gallery: [
@@ -40,7 +40,7 @@ export const PRODUCTS: Product[] = [
     name: 'Fusil CiovElec™',
     tagline: 'L\'Avantage Tactique',
     price: 29.99,
-    originalPrice: 59.99,
+    originalPrice: 69.99,
     currency: 'EUR',
     image: 'https://storage.googleapis.com/novelec_assets/fusil.webp',
     gallery: [
