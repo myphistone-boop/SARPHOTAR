@@ -6,7 +6,7 @@ export const PRODUCTS: Product[] = [
     id: 'pistol-novelec', // <--- CET ID DOIT ÊTRE IDENTIQUE À LA "KEY" DANS api/stripe-config.ts
     name: 'Pistolet NovElec™',
     tagline: '100% Électrique',
-    price: 19.99,
+    price: 34.99,
     originalPrice: 49.99,
     currency: 'EUR',
     image: 'https://storage.googleapis.com/novelec_assets/Pistolet.webp',
@@ -39,7 +39,7 @@ export const PRODUCTS: Product[] = [
     id: 'ciovelec-rifle',
     name: 'Fusil CiovElec™',
     tagline: 'L\'Avantage Tactique',
-    price: 29.99,
+    price: 49.99,
     originalPrice: 69.99,
     currency: 'EUR',
     image: 'https://storage.googleapis.com/novelec_assets/fusil.webp',
