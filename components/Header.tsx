@@ -100,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({
                 {/* PROMO BADGE: Visible, doesn't overlap theme */}
                 <div className="hidden xs:flex items-center gap-1.5 bg-red-600 text-white px-2 py-0.5 rounded-md shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse-slow transform hover:scale-105 transition-transform cursor-default">
                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                   <span className="text-[9px] font-black uppercase tracking-wider whitespace-nowrap">Noël -50%</span>
+                   <span className="text-[9px] font-black uppercase tracking-wider whitespace-nowrap">Offre 2026</span>
                 </div>
             </div>
             

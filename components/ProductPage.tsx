@@ -393,7 +393,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
                         </span>
-                        Offre Noël -50%
+                        Offre 2026
                     </div>
                 </div>
 
@@ -447,7 +447,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
                         </span>
-                        Offre Noël -50%
+                        Offre 2026
                     </div>
 
                     <div className="flex items-center justify-between gap-4 pt-1">
