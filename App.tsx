@@ -25,7 +25,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
-  
+  const [refTag, setRefTag] = useState<string | null>(null);
   // Toast State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   
@@ -56,6 +56,19 @@ function App() {
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  // Capture ?ref= et le persist en sessionStorage
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const ref = query.get('ref');
+    if (ref) {
+      sessionStorage.setItem('ref', ref);
+      setRefTag(ref);
+    } else {
+      const stored = sessionStorage.getItem('ref');
+      if (stored) setRefTag(stored);
+    }
+  }, []);
 
   // Handle Payment Success from URL
   useEffect(() => {
@@ -110,7 +123,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items, ref: refTag }),
       });
       
       const data = await response.json();

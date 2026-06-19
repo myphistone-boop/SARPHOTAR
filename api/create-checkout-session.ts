@@ -13,8 +13,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { items } = req.body as {
+    const { items, ref } = req.body as {
       items: { key: string; quantity: number }[];
+      ref?: string;
     };
 
     if (!items || items.length === 0) {
@@ -68,11 +69,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       client_reference_id: orderNumber,
       metadata: {
         orderNumber: orderNumber,
-        source: 'sarphotar_web'
+        source: 'sarphotar_web',
+        ...(ref ? { ref } : {}),
       },
       payment_intent_data: {
         metadata: {
-          orderNumber: orderNumber
+          orderNumber: orderNumber,
+          ...(ref ? { ref } : {}),
         }
       },
 
