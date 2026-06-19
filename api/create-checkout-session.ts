@@ -61,6 +61,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       mode: 'payment',
       line_items,
 
+      // --- Codes promo ---
+      allow_promotion_codes: true,
+
       // --- Metadata & Références Commande ---
       client_reference_id: orderNumber,
       metadata: {
