@@ -386,17 +386,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     100% Électrique
                 </div>
 
-                <div className="absolute top-0 right-0 z-20">
-                    <div className="relative bg-gradient-to-bl from-red-600 to-red-500 text-white text-xs md:text-sm font-black uppercase tracking-widest px-6 py-3 rounded-bl-3xl shadow-[0_5px_25px_rgba(220,38,38,0.5)] flex items-center gap-3"
-                         style={{ animation: 'holidayPulse 2s ease-in-out infinite' }}>
-                        <span className="relative flex h-2.5 w-2.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
-                        </span>
-                        Offre Noël -50%
-                    </div>
-                </div>
-
                 <div className="flex items-end justify-between mb-6 border-b border-black/5 dark:border-white/5 pb-4 mt-8">
                     <div className="flex flex-col">
                         <span className="text-xs font-bold uppercase text-textMuted tracking-wider mb-1">Prix Unitaire</span>
@@ -440,16 +429,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
                  {/* ACTION BAR SLIM (Large et fine, insérée ici) */}
                  <div className="relative bg-surface/80 dark:bg-[#111]/90 backdrop-blur-md p-4 rounded-xl border border-black/5 dark:border-white/10 mb-8 shadow-md">
-                    {/* PROMIMENT FLOATING BADGE FOR MOBILE */}
-                    <div className="absolute -top-3 left-4 z-10 bg-red-600 text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-[0_5px_15px_rgba(220,38,38,0.5)] flex items-center gap-2"
-                         style={{ animation: 'holidayPulse 2s ease-in-out infinite' }}>
-                        <span className="relative flex h-1.5 w-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
-                        </span>
-                        Offre Noël -50%
-                    </div>
-
                     <div className="flex items-center justify-between gap-4 pt-1">
                         <div className="flex flex-col shrink-0">
                             <div className="flex items-baseline gap-2">
