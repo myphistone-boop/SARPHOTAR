@@ -6,8 +6,8 @@ export const PRODUCTS: Product[] = [
     id: 'pistol-novelec', // <--- CET ID DOIT ÊTRE IDENTIQUE À LA "KEY" DANS api/stripe-config.ts
     name: 'Pistolet NovElec™',
     tagline: '100% Électrique',
-    price: 19.99,
-    originalPrice: 39.99,
+    price: 39.99,
+    originalPrice: 49.99,
     currency: 'EUR',
     image: 'https://storage.googleapis.com/novelec_assets/Pistolet.webp',
     gallery: [
