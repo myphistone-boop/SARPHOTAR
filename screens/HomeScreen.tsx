@@ -164,11 +164,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
         ))}
       </section>
 
-      {/* CERTIFICATIONS & PAIEMENT */}
+      {/* QUALITÉ & PAIEMENT */}
       <section className="mt-8 px-5 max-w-2xl mx-auto">
         <div className="flex items-center gap-3 mb-4">
           <span className="h-px w-8 bg-accent" />
-          <span className="font-hud text-[10px] tracking-[0.3em] text-accent">CERTIFICATIONS</span>
+          <span className="font-hud text-[10px] tracking-[0.3em] text-accent">QUALITÉ &amp; GARANTIES</span>
         </div>
         <CertBadges />
         <div className="mt-5 bg-surface border border-white/8 rounded-2xl p-5 edge-top">

@@ -68,27 +68,29 @@ export const Guarantee: React.FC<{ className?: string }> = ({ className = '' }) 
   </div>
 );
 
-/* ---------------- Certifications (labels de production) ---------------- */
+/* ---------------- Labels qualité (non réglementés) ---------------- */
 
-const CERTS: { code: string; label: string }[] = [
-  { code: 'CE', label: 'Conformité EU' },
-  { code: 'EN71', label: 'Sécurité jouets' },
-  { code: 'RoHS', label: 'Sans substances nocives' },
-  { code: 'IPX4', label: 'Résistant éclaboussures' },
-  { code: 'BPA-FREE', label: 'Sans BPA' },
-  { code: 'ISO 9001', label: 'Qualité de production' },
+type Seal = { title: string; sub: string; ring: string; icon: React.ReactNode };
+
+const SEALS: Seal[] = [
+  { title: 'N°1 DES VENTES', sub: 'Été 2026', ring: '#FFB020', icon: (<><circle cx="12" cy="8" r="6" /><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1" /></>) },
+  { title: 'TESTÉ EN LABO', sub: 'Contrôlé avant envoi', ring: '#38E1F0', icon: (<><path d="M10 2v6.3L4.6 17A2 2 0 0 0 6.3 20h11.4a2 2 0 0 0 1.7-3L14 8.3V2" /><path d="M8.5 2h7" /><path d="M7 15h10" /></>) },
+  { title: 'QUALITÉ PREMIUM', sub: 'Finitions vérifiées', ring: '#37E29A', icon: (<><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /><path d="m9 12 2 2 4-4" /></>) },
+  { title: 'NON-TOXIQUE', sub: 'Matériaux sûrs & sans BPA', ring: '#37E29A', icon: (<><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6" /></>) },
+  { title: 'RÉSISTANT À L\'EAU', sub: 'Joint étanche renforcé', ring: '#2C90FF', icon: (<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5S12.5 5 12 2.5C11.5 5 10 7.4 8 9.5 6 11.1 5 13 5 15a7 7 0 0 0 7 7Z" />) },
+  { title: 'GARANTIE 2 ANS', sub: 'SAV réactif 7j/7', ring: '#CAD2DA', icon: (<><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z" /><path d="m9 12 2 2 4-4" /></>) },
 ];
 
 export const CertBadges: React.FC<{ className?: string }> = ({ className = '' }) => (
   <div className={`grid grid-cols-2 sm:grid-cols-3 gap-2.5 ${className}`}>
-    {CERTS.map((c) => (
-      <div key={c.code} className="flex items-center gap-2.5 bg-surface border border-white/8 rounded-xl px-3 py-2.5 edge-top">
-        <span className="grid place-items-center w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-good shrink-0">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></svg>
+    {SEALS.map((s) => (
+      <div key={s.title} className="flex items-center gap-3 bg-surface border border-white/8 rounded-xl px-3 py-2.5 edge-top">
+        <span className="relative grid place-items-center w-10 h-10 rounded-full shrink-0" style={{ background: `${s.ring}14`, boxShadow: `inset 0 0 0 1.5px ${s.ring}66, 0 0 12px ${s.ring}22` }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={s.ring} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">{s.icon}</svg>
         </span>
         <div className="min-w-0">
-          <div className="font-hud text-[11px] font-semibold tracking-wide text-ghost leading-none">{c.code}</div>
-          <div className="text-[10px] text-muted leading-tight mt-0.5 truncate">{c.label}</div>
+          <div className="font-hud text-[11px] font-semibold tracking-wide text-ghost leading-none">{s.title}</div>
+          <div className="text-[10px] text-muted leading-tight mt-0.5 truncate">{s.sub}</div>
         </div>
       </div>
     ))}
