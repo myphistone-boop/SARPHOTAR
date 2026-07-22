@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; }
+html, body { background: #08090B; overscroll-behavior-y: none; }
+body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* App feel: hide scrollbars, keep momentum scroll */
+* { -webkit-overflow-scrolling: touch; }
+::-webkit-scrollbar { width: 0; height: 0; display: none; }
+body { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Prevent text selection on UI chrome */
+button, nav, header, .hud-ui { -webkit-user-select: none; user-select: none; }
+
+/* Safe areas */
+.pt-safe { padding-top: env(safe-area-inset-top); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+.bottom-safe { bottom: env(safe-area-inset-bottom); }
+
+/* --- HUD utilities --- */
+.font-hud { font-family: "Chakra Petch", monospace; }
+
+.tech-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.dot-grid {
+  background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.hud-frame { position: relative; }
+.hud-frame::before, .hud-frame::after {
+  content: ""; position: absolute; width: 16px; height: 16px; pointer-events: none;
+  border-color: rgba(56,225,240,0.6); z-index: 5;
+}
+.hud-frame::before { top: 8px; left: 8px; border-top: 2px solid; border-left: 2px solid; }
+.hud-frame::after  { bottom: 8px; right: 8px; border-bottom: 2px solid; border-right: 2px solid; }
+
+.scanlines { position: relative; overflow: hidden; }
+.scanlines::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 3px);
+  mix-blend-mode: overlay; opacity: 0.5;
+}
+
+.text-glow { text-shadow: 0 0 18px rgba(56,225,240,0.45); }
+
+@keyframes barEntry {
+  0% { transform: scaleY(0); opacity: 0; }
+  55% { transform: scaleY(1.5); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+@keyframes hudPulse {
+  0%,100% { transform: scaleY(1); filter: brightness(1); box-shadow: 0 0 4px rgba(var(--r),var(--g),var(--b),0.4); }
+  50% { transform: scaleY(1.35); filter: brightness(1.35) saturate(1.15);
+    box-shadow: 0 0 8px rgba(var(--r),var(--g),var(--b),0.9), 0 0 18px rgba(var(--r),var(--g),var(--b),0.45); }
+}
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }

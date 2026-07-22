@@ -4,281 +4,201 @@ import { Product } from '../types';
 interface HeaderProps {
   cartCount: number;
   onCartClick: () => void;
-  isDarkMode: boolean;
-  onToggleTheme: () => void;
   products: Product[];
   onProductSelect: (product: Product) => void;
   currentProduct?: Product;
 }
 
-export const Header: React.FC<HeaderProps> = ({ 
-  cartCount, 
-  onCartClick, 
-  isDarkMode, 
-  onToggleTheme,
+export const Header: React.FC<HeaderProps> = ({
+  cartCount,
+  onCartClick,
   products,
   onProductSelect,
-  currentProduct
+  currentProduct,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isArsenalOpen, setIsArsenalOpen] = useState(false);
-  // ARSENAL MOBILE OPEN BY DEFAULT
-  const [isMobileArsenalOpen, setIsMobileArsenalOpen] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-  
-  // Ref for Arsenal Dropdown to handle click outside
   const arsenalRef = useRef<HTMLDivElement>(null);
 
-  // Detect scroll to adjust header appearance
   useEffect(() => {
-    const handleScroll = () => {
-        setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = '';
-    }
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
   }, [isMobileMenuOpen]);
 
-  // Click Outside Handler for Arsenal
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (arsenalRef.current && !arsenalRef.current.contains(event.target as Node)) {
-        setIsArsenalOpen(false);
-      }
+    const handler = (e: MouseEvent) => {
+      if (arsenalRef.current && !arsenalRef.current.contains(e.target as Node)) setIsArsenalOpen(false);
     };
-
-    if (isArsenalOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    if (isArsenalOpen) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, [isArsenalOpen]);
 
   const navLinks = [
-    { name: 'Collection', href: '#shop' },
+    { name: 'Arsenal', href: '#shop' },
     { name: 'Technologie', href: '#specs' },
     { name: 'Services', href: '#services' },
     { name: 'FAQ', href: '#faq' },
   ];
 
-  const handleLinkClick = (href: string) => {
+  const scrollTo = (href: string) => {
     setIsMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleArsenalSelect = (product: Product) => {
-    onProductSelect(product);
-    setIsArsenalOpen(false);
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <>
-        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 pointer-events-none`}>
-        {/* Background Layer */}
-        <div className={`absolute inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 h-full z-0 transition-all duration-500 ${scrolled ? 'opacity-100 shadow-sm' : 'opacity-95'}`}></div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
-            {/* Logo Area + Promo Badge */}
-            <div className="pointer-events-auto flex items-center gap-3 relative z-20 shrink-0">
-                <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-2xl font-black tracking-tighter italic font-display text-black dark:text-white">
-                    SARPHOTAR<span className="text-black dark:text-white">™</span><span className="text-black dark:text-white">.</span>
-                </a>
-                
-            </div>
-            
-            {/* DESKTOP NAVIGATION */}
-            <nav className="hidden md:flex pointer-events-auto items-center gap-8 absolute left-1/2 -translate-x-1/2">
-                {navLinks.map((link) => (
-                    <a 
-                        key={link.name}
-                        href={link.href}
-                        onClick={(e) => { e.preventDefault(); handleLinkClick(link.href); }}
-                        className="text-sm font-bold uppercase tracking-widest text-textMuted dark:text-darkTextMuted hover:text-black dark:hover:text-white transition-colors relative group"
-                    >
-                        {link.name}
-                        <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
-                    </a>
-                ))}
-            </nav>
-            
-            {/* Right Icons Area */}
-            {/* FLEX ORDER STRATEGY: 
-                Mobile: Theme(1) -> Arsenal(2) -> Cart(3) -> Menu(4) 
-                Desktop: Arsenal(1) -> Divider(2) -> Theme(3) -> Cart(4)
-            */}
-            <div className="flex items-center gap-2 md:gap-3 pointer-events-auto relative z-20">
-                
-                {/* 1. THEME TOGGLE (Mobile: Order 1, Desktop: Order 3) */}
-                <button 
-                    onClick={onToggleTheme}
-                    className="order-1 md:order-3 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-black dark:text-white"
-                    aria-label="Toggle Theme"
-                >
-                    {isDarkMode ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>
-                    ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                    )}
-                </button>
-
-                {/* 2. ARSENAL BUTTON (Mobile: Order 2, Desktop: Order 1) */}
-                <div ref={arsenalRef} className="relative order-2 md:order-1">
-                    <button 
-                        onClick={() => setIsArsenalOpen(!isArsenalOpen)}
-                        className="flex items-center gap-2 bg-black/5 dark:bg-white/10 px-3 py-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/20 transition-all group border border-transparent hover:border-black/30 dark:hover:border-white/30"
-                    >
-                         {/* Unified Text Style for Mobile & PC */}
-                         <span className="text-xs font-bold text-black dark:text-white uppercase tracking-widest group-hover:text-black dark:group-hover:text-white transition-colors">ARSENAL</span>
-                         <svg 
-                            className={`w-4 h-4 text-black dark:text-white transition-transform duration-300 ${isArsenalOpen ? 'rotate-180' : ''}`} 
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                         >
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                         </svg>
-                    </button>
-
-                    {/* Arsenal Dropdown */}
-                    {isArsenalOpen && (
-                        <div className="absolute top-full right-0 mt-2 w-64 md:w-96 bg-white dark:bg-[#111] rounded-xl border border-black/10 dark:border-white/10 shadow-2xl overflow-hidden animate-float-up z-50">
-                            <div className="p-2 space-y-1">
-                                {products.map((p) => {
-                                  const isActive = currentProduct?.id === p.id;
-                                  return (
-                                    <button
-                                        key={p.id}
-                                        onClick={() => handleArsenalSelect(p)}
-                                        className={`w-full flex items-center gap-3 p-2 md:p-3 rounded-lg transition-colors group text-left ${isActive ? 'bg-black/10 dark:bg-white/10 border border-black/20 dark:border-white/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 border border-transparent'}`}
-                                    >
-                                        <div className="w-10 h-10 md:w-14 md:h-14 bg-gray-50 dark:bg-white/5 rounded-md p-1 flex items-center justify-center">
-                                            <img src={p.image} alt={p.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
-                                        </div>
-                                        <div>
-                                            <div className={`text-xs md:text-sm font-black italic uppercase font-display transition-colors ${isActive ? 'text-black dark:text-white' : 'text-black dark:text-white group-hover:text-black dark:group-hover:text-white'}`}>
-                                                {p.name}
-                                            </div>
-                                            <div className="text-[9px] md:text-[10px] text-gray-500 font-bold">{p.tagline}</div>
-                                        </div>
-                                    </button>
-                                  );
-                                })}
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* 3. DIVIDER (Mobile: Hidden, Desktop: Order 2) */}
-                <div className="hidden md:block md:order-2 h-6 w-[1px] bg-black/10 dark:bg-white/10 mx-1"></div>
-
-                {/* 4. CART ACTION (Mobile: Order 3, Desktop: Order 4) */}
-                <button 
-                    onClick={onCartClick}
-                    className="order-3 md:order-4 group relative p-2 flex items-center gap-2 hover:opacity-70 transition-opacity text-black dark:text-white"
-                    aria-label="Panier"
-                >
-                    <div className="relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                        </svg>
-                        {cartCount > 0 && (
-                        <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-black dark:bg-white text-[9px] font-bold text-white dark:text-black animate-pulse">
-                            {cartCount}
-                        </span>
-                        )}
-                    </div>
-                </button>
-
-                {/* 5. MENU (Mobile: Order 4, Desktop: Hidden) */}
-                <button 
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="order-4 md:hidden p-2 text-black dark:text-white focus:outline-none ml-1"
-                    aria-label="Menu"
-                >
-                     <div className="w-6 h-6 flex flex-col justify-center items-end gap-1.5">
-                        <span className={`block w-6 h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-                        <span className={`block w-4 h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
-                        <span className={`block w-6 h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
-                     </div>
-                </button>
-            </div>
+      <header className="hud-ui fixed top-0 left-0 right-0 z-50 pointer-events-none pt-safe">
+        <div
+          className={`absolute inset-0 h-full z-0 transition-all duration-500 ${
+            scrolled ? 'bg-ink/85 backdrop-blur-xl border-b border-white/10' : 'bg-gradient-to-b from-ink/90 to-transparent'
+          }`}
+        />
+        {/* animated hud hairline */}
+        <div className={`absolute bottom-0 left-0 h-px w-full overflow-hidden transition-opacity ${scrolled ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="h-full w-1/3 bg-gradient-to-r from-transparent via-hud to-transparent animate-[marquee_3s_linear_infinite]" />
         </div>
-        </header>
 
-        {/* MOBILE MENU OVERLAY */}
-        <div className={`fixed inset-0 z-40 bg-white dark:bg-black transition-transform duration-500 ease-in-out md:hidden flex flex-col pt-24 px-6 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-             <nav className="flex flex-col gap-6 items-center justify-start overflow-y-auto h-full pb-20 no-scrollbar">
-                
-                {/* MOBILE ARSENAL DROPDOWN */}
-                <div className="flex flex-col items-center w-full mt-4">
-                    <button 
-                        onClick={() => setIsMobileArsenalOpen(!isMobileArsenalOpen)}
-                        className="text-3xl font-black italic uppercase font-display text-black dark:text-white hover:text-black dark:hover:text-white transition-colors flex items-center gap-3"
-                    >
-                        ARSENAL
-                        <svg 
-                            className={`w-6 h-6 transition-transform duration-300 ${isMobileArsenalOpen ? 'rotate-180' : ''}`} 
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between">
+          {/* Wordmark */}
+          <div className="pointer-events-auto flex items-center gap-3 shrink-0">
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className="flex items-center gap-2.5 group"
+            >
+              <span className="grid place-items-center w-8 h-8 rounded-md bg-white text-ink font-display font-black italic text-lg leading-none group-hover:shadow-[0_0_18px_rgba(255,255,255,0.4)] transition-shadow">S</span>
+              <span className="flex flex-col leading-none">
+                <span className="text-lg font-black tracking-tighter italic font-display text-white">SARPHOTAR™</span>
+                <span className="hidden sm:flex items-center gap-1.5 font-hud text-[8px] tracking-[0.3em] text-hud/80 mt-0.5">
+                  <span className="w-1 h-1 rounded-full bg-hud animate-pulse" /> SYSTEM ONLINE
+                </span>
+              </span>
+            </a>
+          </div>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex pointer-events-auto items-center gap-8 absolute left-1/2 -translate-x-1/2">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => { e.preventDefault(); scrollTo(link.href); }}
+                className="font-hud text-xs uppercase tracking-[0.2em] text-muted hover:text-white transition-colors relative group"
+              >
+                {link.name}
+                <span className="absolute -bottom-1.5 left-0 w-0 h-[2px] bg-hud transition-all duration-300 group-hover:w-full" />
+              </a>
+            ))}
+          </nav>
+
+          {/* Right controls */}
+          <div className="flex items-center gap-2 md:gap-3 pointer-events-auto">
+            {/* Arsenal */}
+            <div ref={arsenalRef} className="relative">
+              <button
+                onClick={() => setIsArsenalOpen(!isArsenalOpen)}
+                className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-2 rounded-md hover:border-hud/50 transition-all group"
+              >
+                <span className="font-hud text-[11px] font-semibold text-white uppercase tracking-[0.2em]">ARSENAL</span>
+                <svg className={`w-3.5 h-3.5 text-hud transition-transform duration-300 ${isArsenalOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+              </button>
+
+              {isArsenalOpen && (
+                <div className="absolute top-full right-0 mt-2 w-72 md:w-96 bg-panel border border-white/10 rounded-xl shadow-panel overflow-hidden animate-float-up z-50">
+                  <div className="px-4 py-2 border-b border-white/5 font-hud text-[9px] tracking-[0.3em] text-hud/80">SÉLECTION DE L'ÉQUIPEMENT</div>
+                  <div className="p-2 space-y-1">
+                    {products.map((p) => {
+                      const active = currentProduct?.id === p.id;
+                      return (
+                        <button
+                          key={p.id}
+                          onClick={() => { onProductSelect(p); setIsArsenalOpen(false); }}
+                          className={`w-full flex items-center gap-3 p-2.5 rounded-lg transition-colors text-left border ${active ? 'bg-white/10 border-hud/30' : 'border-transparent hover:bg-white/5'}`}
                         >
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-                    
-                    <div className={`flex flex-col gap-3 w-full max-w-xs transition-all duration-500 ease-in-out overflow-hidden ${isMobileArsenalOpen ? 'max-h-[500px] opacity-100 my-6' : 'max-h-0 opacity-0'}`}>
-                        {products.map((p) => (
-                            <button
-                                key={p.id}
-                                onClick={() => {
-                                    onProductSelect(p);
-                                    setIsMobileMenuOpen(false);
-                                }}
-                                className="flex items-center gap-4 bg-zinc-50 dark:bg-white/5 p-4 rounded-xl border border-black/5 dark:border-white/5 active:scale-95 transition-all text-left group hover:border-black/30 dark:hover:border-white/30"
-                            >
-                                <div className="w-12 h-12 bg-white dark:bg-black/20 rounded-lg p-1 flex items-center justify-center shrink-0">
-                                    <img src={p.image} alt={p.name} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" />
-                                </div>
-                                <div>
-                                    <div className="text-base font-black italic uppercase font-display text-black dark:text-white leading-none mb-1 group-hover:text-black dark:group-hover:text-white transition-colors">{p.name}</div>
-                                    <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 tracking-widest uppercase">{p.tagline}</div>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
+                          <div className="w-12 h-12 bg-black/40 rounded-md p-1 flex items-center justify-center border border-white/5">
+                            <img src={p.image} alt={p.name} loading="lazy" decoding="async" className="w-full h-full object-contain" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-sm font-black italic uppercase font-display text-white truncate">{p.name}</div>
+                            <div className="font-hud text-[10px] text-muted tracking-wider truncate">{p.tagline}</div>
+                          </div>
+                          <span className="ml-auto font-hud text-xs text-hud">{p.price}€</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
+              )}
+            </div>
 
-                {navLinks.map((link, idx) => (
-                    <a 
-                        key={link.name}
-                        href={link.href}
-                        onClick={(e) => { e.preventDefault(); handleLinkClick(link.href); }}
-                        className="text-3xl font-black italic uppercase font-display text-black dark:text-white hover:text-black dark:hover:text-white transition-colors"
-                        style={{ transitionDelay: `${idx * 50}ms` }}
-                    >
-                        {link.name}
-                    </a>
-                ))}
-                
-                <div className="w-12 h-1 bg-black/20 dark:bg-white/20 mt-8 mb-8 rounded-full shrink-0"></div>
+            <div className="hidden md:block h-6 w-px bg-white/10" />
 
-                <div className="text-center shrink-0">
-                    <p className="text-xs font-bold uppercase tracking-widest text-textMuted mb-2">Service Client</p>
-                    <p className="text-sm font-medium text-black dark:text-white">support@sarphotar.com</p>
-                </div>
-             </nav>
+            {/* Cart */}
+            <button onClick={onCartClick} className="relative p-2 text-white hover:text-hud transition-colors" aria-label="Panier">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-ember text-[9px] font-bold text-white">{cartCount}</span>
+              )}
+            </button>
+
+            {/* Mobile menu toggle */}
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 text-white" aria-label="Menu">
+              <div className="w-6 h-6 flex flex-col justify-center items-end gap-1.5">
+                <span className={`block h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'w-6 rotate-45 translate-y-2' : 'w-6'}`} />
+                <span className={`block h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'w-4'}`} />
+                <span className={`block h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'w-6 -rotate-45 -translate-y-2' : 'w-6'}`} />
+              </div>
+            </button>
+          </div>
         </div>
+      </header>
+
+      {/* Mobile fullscreen menu */}
+      <div className={`hud-ui fixed inset-0 z-40 bg-ink tech-grid transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden flex flex-col pt-24 px-6 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex flex-col gap-3 mt-2">
+          <span className="font-hud text-[10px] tracking-[0.3em] text-hud/80 mb-1">ÉQUIPEMENT</span>
+          {products.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => { onProductSelect(p); setIsMobileMenuOpen(false); }}
+              className="flex items-center gap-4 bg-panel border border-white/10 p-3.5 rounded-xl active:scale-[0.98] transition-all text-left"
+            >
+              <div className="w-14 h-14 bg-black/40 rounded-lg p-1.5 flex items-center justify-center border border-white/5 shrink-0">
+                <img src={p.image} alt={p.name} loading="lazy" decoding="async" className="w-full h-full object-contain" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-lg font-black italic uppercase font-display text-white leading-none mb-1">{p.name}</div>
+                <div className="font-hud text-[10px] text-muted tracking-widest uppercase">{p.tagline}</div>
+              </div>
+              <span className="ml-auto font-hud text-hud">{p.price}€</span>
+            </button>
+          ))}
+        </div>
+
+        <nav className="flex flex-col gap-1 mt-8">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              onClick={(e) => { e.preventDefault(); scrollTo(link.href); }}
+              className="py-3 border-b border-white/5 text-2xl font-black italic uppercase font-display text-white/90 hover:text-hud transition-colors"
+            >
+              {link.name}
+            </a>
+          ))}
+        </nav>
+
+        <div className="mt-auto mb-8 text-center">
+          <p className="font-hud text-[10px] tracking-[0.3em] text-muted mb-1">SUPPORT TACTIQUE</p>
+          <p className="text-sm font-medium text-white">sarphotar.pro@gmail.com</p>
+        </div>
+      </div>
     </>
   );
 };
