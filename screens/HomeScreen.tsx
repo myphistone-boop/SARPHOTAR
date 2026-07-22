@@ -13,8 +13,12 @@ interface HomeScreenProps {
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, onAddToCart, onGoArsenal, onContact }) => {
-  const featured = weapons[weapons.length - 1] ?? weapons[0];
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
+  const [featIdx, setFeatIdx] = useState(0);
+  const count = weapons.length;
+  const featured = weapons[featIdx] ?? weapons[0];
+  const featPrev = () => setFeatIdx((i) => (i - 1 + count) % count);
+  const featNext = () => setFeatIdx((i) => (i + 1) % count);
 
   return (
     <div className="screen-in pb-tabbar">
@@ -68,12 +72,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
           <span className="font-hud text-[10px] tracking-[0.3em] text-muted">PIÈCE MAÎTRESSE</span>
           <span className="h-px flex-1 bg-white/10" />
         </div>
-        <button onClick={() => onOpenWeapon(featured)} className="w-full text-left bg-surface border border-white/10 rounded-xl2 overflow-hidden shadow-card edge-top">
+        <div className="relative w-full bg-surface border border-white/10 rounded-xl2 overflow-hidden shadow-card edge-top">
+          {/* image + navigation */}
           <div className="relative aspect-[4/3]">
-            <img src={featured.image} alt={featured.name} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+            <img key={featured.id} src={featured.image} alt={featured.name} loading="lazy" decoding="async" onClick={() => onOpenWeapon(featured)} className="absolute inset-0 w-full h-full object-cover cursor-pointer animate-fade" />
             <span className="absolute top-3 left-3 font-hud text-[9px] font-semibold tracking-[0.25em] px-2 py-1 rounded backdrop-blur-sm" style={{ color: featured.meta.rarityColor, background: `${featured.meta.rarityColor}22`, border: `1px solid ${featured.meta.rarityColor}55` }}>{featured.meta.rarity}</span>
+
+            <button onClick={featPrev} aria-label="Précédent" className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-carbon/65 backdrop-blur border border-white/15 text-ghost grid place-items-center hover:border-accent active:scale-90 transition-all">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><polyline points="15 18 9 12 15 6" /></svg>
+            </button>
+            <button onClick={featNext} aria-label="Suivant" className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-carbon/65 backdrop-blur border border-white/15 text-ghost grid place-items-center hover:border-accent active:scale-90 transition-all">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><polyline points="9 18 15 12 9 6" /></svg>
+            </button>
+
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+              {weapons.map((_, i) => (
+                <button key={i} onClick={() => setFeatIdx(i)} aria-label={`Arme ${i + 1}`} className="h-1.5 rounded-full transition-all duration-300" style={{ width: i === featIdx ? 28 : 8, background: i === featIdx ? '#CAD2DA' : 'rgba(255,255,255,0.3)' }} />
+              ))}
+            </div>
           </div>
-          <div className="p-5">
+
+          {/* body */}
+          <button onClick={() => onOpenWeapon(featured)} className="block w-full text-left p-5">
             <h2 className="text-3xl font-black italic uppercase font-display text-ghost leading-none mb-1">{featured.name}</h2>
             <p className="font-hud text-[10px] tracking-[0.2em] text-muted uppercase mb-4">{featured.tagline}</p>
             <StatTriplet specs={featured.specs} />
@@ -84,8 +104,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
               </div>
               <span className="font-hud text-[11px] tracking-widest text-accent flex items-center gap-1.5">INSPECTER <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6" /></svg></span>
             </div>
-          </div>
-        </button>
+          </button>
+        </div>
       </section>
 
       {/* QUICK ARSENAL */}
