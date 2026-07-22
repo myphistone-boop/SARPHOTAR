@@ -9,11 +9,11 @@ export const PRODUCTS: Product[] = [
     price: 39.99,
     originalPrice: 49.99,
     currency: 'EUR',
-    image: 'https://storage.googleapis.com/novelec_assets/Pistolet.webp',
+    image: '/weapons/pistolet.webp',
     gallery: [
-      'https://storage.googleapis.com/novelec_assets/Pistolet.webp',
-      'https://storage.googleapis.com/novelec_assets/cross%20pistolet.webp',
-      'https://storage.googleapis.com/novelec_assets/Accessoires_parfait.webp'
+      '/weapons/pistolet.webp',
+      '/weapons/cross_pistolet.webp',
+      '/weapons/accessoires.webp'
     ],
     rating: 4.8,
     reviewCount: 124,
@@ -42,10 +42,10 @@ export const PRODUCTS: Product[] = [
     price: 29.99,
     originalPrice: 59.99,
     currency: 'EUR',
-    image: 'https://storage.googleapis.com/novelec_assets/fusil.webp',
+    image: '/weapons/fusil.webp',
     gallery: [
-      'https://storage.googleapis.com/novelec_assets/fusil.webp',
-      'https://storage.googleapis.com/novelec_assets/cross_fusil.webp'
+      '/weapons/fusil.webp',
+      '/weapons/cross_fusil.webp'
     ],
     rating: 4.9,
     reviewCount: 89,
@@ -74,10 +74,10 @@ export const PRODUCTS: Product[] = [
     price: 99.99,
     originalPrice: 199.99,
     currency: 'EUR',
-    image: 'https://storage.googleapis.com/novelec_assets/gatling.webp',
+    image: '/weapons/gatling.webp',
     gallery: [
-      'https://storage.googleapis.com/novelec_assets/gatling.webp',
-      'https://storage.googleapis.com/novelec_assets/batterie_gatling.webp',
+      '/weapons/gatling.webp',
+      '/weapons/batterie_gatling.webp',
     ],
     rating: 5.0,
     reviewCount: 42,
