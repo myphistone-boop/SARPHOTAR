@@ -69,11 +69,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
           <span className="h-px flex-1 bg-white/10" />
         </div>
         <button onClick={() => onOpenWeapon(featured)} className="w-full text-left bg-surface border border-white/10 rounded-xl2 overflow-hidden shadow-card edge-top">
-          <div className="relative aspect-[16/10] dot-grid" style={{ ['--tw' as string]: featured.meta.rarityColor }}>
-            <div className="absolute inset-0" style={{ background: `radial-gradient(60% 60% at 50% 55%, ${featured.meta.rarityColor}22, transparent 70%)` }} />
-            <img src={featured.image} alt={featured.name} loading="lazy" decoding="async" className="mask-orb absolute inset-0 w-full h-full object-contain p-6 animate-float" />
-            <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(74% 66% at 50% 42%, transparent 55%, #141619 92%)' }} />
-            <span className="absolute top-3 left-3 font-hud text-[9px] font-semibold tracking-[0.25em] px-2 py-1 rounded" style={{ color: featured.meta.rarityColor, background: `${featured.meta.rarityColor}1A`, border: `1px solid ${featured.meta.rarityColor}44` }}>{featured.meta.rarity}</span>
+          <div className="relative aspect-[4/3]">
+            <img src={featured.image} alt={featured.name} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+            <span className="absolute top-3 left-3 font-hud text-[9px] font-semibold tracking-[0.25em] px-2 py-1 rounded backdrop-blur-sm" style={{ color: featured.meta.rarityColor, background: `${featured.meta.rarityColor}22`, border: `1px solid ${featured.meta.rarityColor}55` }}>{featured.meta.rarity}</span>
           </div>
           <div className="p-5">
             <h2 className="text-3xl font-black italic uppercase font-display text-ghost leading-none mb-1">{featured.name}</h2>
@@ -99,9 +97,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
         <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 pb-2 snap-x snap-mandatory">
           {weapons.map((w) => (
             <button key={w.id} onClick={() => onOpenWeapon(w)} className="snap-start shrink-0 w-40 bg-surface border border-white/10 rounded-xl overflow-hidden text-left active:scale-[0.98] transition-transform edge-top">
-              <div className="relative aspect-square dot-grid">
-                <img src={w.image} alt={w.name} loading="lazy" decoding="async" className="mask-orb-sm absolute inset-0 w-full h-full object-contain p-3" />
-                <span className="absolute top-2 left-2 font-hud text-[8px] tracking-[0.2em] px-1.5 py-0.5 rounded" style={{ color: w.meta.rarityColor, background: `${w.meta.rarityColor}1A` }}>{w.meta.klass}</span>
+              <div className="relative aspect-square">
+                <img src={w.image} alt={w.name} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+                <span className="absolute top-2 left-2 font-hud text-[8px] tracking-[0.2em] px-1.5 py-0.5 rounded backdrop-blur-sm" style={{ color: w.meta.rarityColor, background: `${w.meta.rarityColor}22` }}>{w.meta.klass}</span>
               </div>
               <div className="p-3">
                 <div className="text-sm font-black italic uppercase font-display text-ghost leading-tight truncate">{w.name}</div>

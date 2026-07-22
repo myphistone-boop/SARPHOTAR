@@ -46,13 +46,9 @@ export const ArsenalScreen: React.FC<ArsenalScreenProps> = ({ weapons, onOpenWea
               <span className="font-hud text-[9px] tracking-[0.2em] text-muted">{w.meta.klass} · NIV {String(idx + 1).padStart(2, '0')}</span>
             </div>
 
-            <button onClick={() => onOpenWeapon(w)} className="relative w-full aspect-[16/9] dot-grid mt-1 block">
-              <div className="absolute inset-0" style={{ background: `radial-gradient(55% 60% at 50% 55%, ${w.meta.rarityColor}1F, transparent 70%)` }} />
-              <span className="absolute top-3 left-3 w-4 h-4 border-t border-l border-white/20" />
-              <span className="absolute bottom-3 right-3 w-4 h-4 border-b border-r border-white/20" />
-              <img src={w.image} alt={w.name} loading="lazy" decoding="async" className="mask-orb absolute inset-0 w-full h-full object-contain p-5" />
-              <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(72% 64% at 50% 42%, transparent 52%, #141619 92%)' }} />
-              <span className="absolute bottom-3 left-3 flex items-center gap-1.5 font-hud text-[9px] tracking-[0.2em] text-accent">
+            <button onClick={() => onOpenWeapon(w)} className="relative w-full aspect-[4/3] mt-1 block">
+              <img src={w.image} alt={w.name} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
+              <span className="absolute bottom-3 left-3 flex items-center gap-1.5 font-hud text-[9px] tracking-[0.2em] text-white bg-black/45 backdrop-blur-sm px-2 py-1 rounded">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg> INSPECTER 3D
               </span>
             </button>
