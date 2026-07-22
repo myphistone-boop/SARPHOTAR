@@ -3,7 +3,8 @@ import { Weapon } from '../data/catalog';
 import { FAQ_ITEMS } from '../constants';
 import { StatTriplet } from '../components/StatBars';
 import { Button } from '../components/ui/Button';
-import { DiscountBadge, Guarantee } from '../components/Trust';
+import { DiscountBadge, Guarantee, CertBadges, PaymentRow } from '../components/Trust';
+import { ReviewsPill } from '../components/ReviewsPill';
 
 interface HomeScreenProps {
   weapons: Weapon[];
@@ -116,6 +117,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
         </div>
       </section>
 
+      {/* SOCIAL PROOF */}
+      <section className="mt-6 px-5 max-w-2xl mx-auto">
+        <ReviewsPill />
+      </section>
+
       {/* QUICK ARSENAL */}
       <section className="mt-8 max-w-2xl mx-auto">
         <div className="flex items-center justify-between px-5 mb-3">
@@ -156,6 +162,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
             <span className="text-[10px] text-muted">{it.d}</span>
           </div>
         ))}
+      </section>
+
+      {/* CERTIFICATIONS & PAIEMENT */}
+      <section className="mt-8 px-5 max-w-2xl mx-auto">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="h-px w-8 bg-accent" />
+          <span className="font-hud text-[10px] tracking-[0.3em] text-accent">CERTIFICATIONS</span>
+        </div>
+        <CertBadges />
+        <div className="mt-5 bg-surface border border-white/8 rounded-2xl p-5 edge-top">
+          <PaymentRow />
+        </div>
       </section>
 
       {/* TECH */}

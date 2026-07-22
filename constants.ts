@@ -7,7 +7,7 @@ export const PRODUCTS: Product[] = [
     name: 'Pistolet NovElec™',
     tagline: '100% Électrique',
     price: 39.99,
-    originalPrice: 57.13, // prix fictif : -30% => 39.99
+    originalPrice: 60, // prix fictif rond (badge -30% force)
     currency: 'EUR',
     image: 'https://storage.googleapis.com/novelec_assets/Pistolet.webp',
     gallery: [
@@ -40,7 +40,7 @@ export const PRODUCTS: Product[] = [
     name: 'Fusil CiovElec™',
     tagline: 'L\'Avantage Tactique',
     price: 49.99,
-    originalPrice: 71.41, // prix fictif : -30% => 49.99
+    originalPrice: 70, // prix fictif rond (badge -30% force)
     currency: 'EUR',
     image: 'https://storage.googleapis.com/novelec_assets/fusil.webp',
     gallery: [
@@ -72,7 +72,7 @@ export const PRODUCTS: Product[] = [
     name: 'Gatling NovElec™',
     tagline: 'Domination Totale',
     price: 99.99,
-    originalPrice: 142.84, // prix fictif : -30% => 99.99
+    originalPrice: 150, // prix fictif rond (badge -30% force)
     currency: 'EUR',
     image: 'https://storage.googleapis.com/novelec_assets/gatling.webp',
     gallery: [
