@@ -74,10 +74,10 @@ export const PRODUCTS: Product[] = [
     price: 99.99,
     originalPrice: 199.99,
     currency: 'EUR',
-    image: 'https://storage.googleapis.com/novelec_assets/gatling.webp',
+    image: '/weapons/gatling.webp',
     gallery: [
-      'https://storage.googleapis.com/novelec_assets/gatling.webp',
-      'https://storage.googleapis.com/novelec_assets/batterie_gatling.webp',
+      '/weapons/gatling.webp',
+      '/weapons/batterie_gatling.webp',
     ],
     rating: 5.0,
     reviewCount: 42,

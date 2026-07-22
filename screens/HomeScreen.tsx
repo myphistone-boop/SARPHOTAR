@@ -3,16 +3,18 @@ import { Weapon } from '../data/catalog';
 import { FAQ_ITEMS } from '../constants';
 import { StatTriplet } from '../components/StatBars';
 import { Button } from '../components/ui/Button';
+import { DiscountBadge, Guarantee } from '../components/Trust';
 
 interface HomeScreenProps {
   weapons: Weapon[];
   onOpenWeapon: (w: Weapon) => void;
   onAddToCart: (w: Weapon) => void;
+  onBuyNow: (w: Weapon) => void;
   onGoArsenal: () => void;
   onContact: () => void;
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, onAddToCart, onGoArsenal, onContact }) => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, onAddToCart, onBuyNow, onGoArsenal, onContact }) => {
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const [featIdx, setFeatIdx] = useState(0);
   const count = weapons.length;
@@ -77,6 +79,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
           <div className="relative aspect-[4/3]">
             <img key={featured.id} src={featured.image} alt={featured.name} loading="lazy" decoding="async" onClick={() => onOpenWeapon(featured)} className="absolute inset-0 w-full h-full object-cover cursor-pointer animate-fade" />
             <span className="absolute top-3 left-3 font-hud text-[9px] font-semibold tracking-[0.25em] px-2 py-1 rounded backdrop-blur-sm" style={{ color: featured.meta.rarityColor, background: `${featured.meta.rarityColor}22`, border: `1px solid ${featured.meta.rarityColor}55` }}>{featured.meta.rarity}</span>
+            <DiscountBadge price={featured.price} original={featured.originalPrice} className="absolute top-3 right-3" />
 
             <button onClick={featPrev} aria-label="Précédent" className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-carbon/65 backdrop-blur border border-white/15 text-ghost grid place-items-center hover:border-accent active:scale-90 transition-all">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><polyline points="15 18 9 12 15 6" /></svg>
@@ -93,18 +96,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
           </div>
 
           {/* body */}
-          <button onClick={() => onOpenWeapon(featured)} className="block w-full text-left p-5">
-            <h2 className="text-3xl font-black italic uppercase font-display text-ghost leading-none mb-1">{featured.name}</h2>
-            <p className="font-hud text-[10px] tracking-[0.2em] text-muted uppercase mb-4">{featured.tagline}</p>
-            <StatTriplet specs={featured.specs} />
-            <div className="flex items-center justify-between mt-4">
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black font-display text-ghost">{featured.price}€</span>
-                {featured.originalPrice && <span className="text-sm text-muted line-through decoration-danger">{featured.originalPrice}€</span>}
-              </div>
-              <span className="font-hud text-[11px] tracking-widest text-accent flex items-center gap-1.5">INSPECTER <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6" /></svg></span>
+          <div className="p-5">
+            <button onClick={() => onOpenWeapon(featured)} className="block w-full text-left">
+              <h2 className="text-3xl font-black italic uppercase font-display text-ghost leading-none mb-1">{featured.name}</h2>
+              <p className="font-hud text-[10px] tracking-[0.2em] text-muted uppercase mb-4">{featured.tagline}</p>
+              <StatTriplet specs={featured.specs} />
+            </button>
+            <div className="flex items-baseline gap-2 mt-4 mb-3">
+              <span className="text-2xl font-black font-display text-ghost">{featured.price}€</span>
+              {featured.originalPrice && <span className="text-sm text-muted line-through decoration-danger">{featured.originalPrice}€</span>}
+              <span className="ml-auto flex items-center gap-1.5 font-hud text-[9px] tracking-widest text-good"><span className="w-1.5 h-1.5 rounded-full bg-good animate-pulse-dot" /> EN STOCK</span>
             </div>
-          </button>
+            <div className="grid grid-cols-[1fr_1.5fr] gap-2.5">
+              <button onClick={() => onAddToCart(featured)} className="font-hud text-[11px] uppercase tracking-[0.14em] py-3 rounded-xl border border-white/15 text-ghost hover:border-accent hover:text-accent transition-colors active:scale-95">+ Panier</button>
+              <button onClick={() => onBuyNow(featured)} className="font-hud text-xs uppercase tracking-[0.14em] py-3 rounded-xl bg-accent text-carbon hover:shadow-glow transition-all active:scale-95">Acheter</button>
+            </div>
+            <Guarantee className="mt-3 justify-center" />
+          </div>
         </div>
       </section>
 

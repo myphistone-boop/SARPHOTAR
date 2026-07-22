@@ -10,6 +10,7 @@ import { HelpScreen } from './screens/HelpScreen';
 import { SuccessScreen } from './screens/SuccessScreen';
 import { ContactSheet } from './components/ContactSheet';
 import { LegalSheet } from './components/LegalSheet';
+import { track } from './lib/analytics';
 
 function App() {
   const [tab, setTab] = useState<Tab>('home');
@@ -22,11 +23,11 @@ function App() {
   const [toast, setToast] = useState<string | null>(null);
   const [booting, setBooting] = useState(true);
 
-  const { addToCart, removeFromCart, clearCart, count, cart, total } = useCart();
+  const { addToCart, removeFromCart, increment, decrement, clearCart, count, cart, total } = useCart();
 
-  // boot splash
+  // brief boot splash (kept short so content shows fast)
   useEffect(() => {
-    const t = setTimeout(() => setBooting(false), 1150);
+    const t = setTimeout(() => setBooting(false), 500);
     return () => clearTimeout(t);
   }, []);
 
@@ -42,7 +43,9 @@ function App() {
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     if (q.get('payment_success') === 'true') {
-      setSuccess({ open: true, order: q.get('order') });
+      const order = q.get('order');
+      setSuccess({ open: true, order });
+      track('purchase', { transaction_id: order, currency: 'EUR' });
       clearCart();
       window.history.replaceState({}, document.title, window.location.pathname);
     }
@@ -50,10 +53,15 @@ function App() {
 
   const notify = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2600); };
 
-  const handleAddToCart = (w: Weapon) => { addToCart(w); notify(`${w.name} ajouté`); };
+  const handleAddToCart = (w: Weapon) => {
+    addToCart(w);
+    notify(`${w.name} ajouté`);
+    track('add_to_cart', { currency: 'EUR', value: w.price, items: [{ item_id: w.id, item_name: w.name, price: w.price }] });
+  };
 
   const processCheckout = useCallback(async (items: { key: string; quantity: number }[]) => {
     setCheckingOut(true);
+    track('begin_checkout', { currency: 'EUR', num_items: items.reduce((a, i) => a + i.quantity, 0) });
     try {
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
@@ -70,7 +78,10 @@ function App() {
   const handleBuyNow = (w: Weapon) => processCheckout([{ key: w.id, quantity: 1 }]);
   const handleCheckoutFromCart = () => { if (count === 0) return; processCheckout(cart.map((i) => ({ key: i.id, quantity: i.quantity }))); };
 
-  const openWeapon = (w: Weapon) => { setWeapon(w); };
+  const openWeapon = (w: Weapon) => {
+    setWeapon(w);
+    track('view_item', { currency: 'EUR', value: w.price, items: [{ item_id: w.id, item_name: w.name, price: w.price }] });
+  };
   const goArsenal = () => { setWeapon(null); setTab('arsenal'); window.scrollTo(0, 0); };
   const changeTab = (t: Tab) => { setWeapon(null); setTab(t); window.scrollTo(0, 0); };
 
@@ -99,9 +110,9 @@ function App() {
       </div>
 
       {/* Tab screens */}
-      {tab === 'home' && <HomeScreen weapons={WEAPONS} onOpenWeapon={openWeapon} onAddToCart={handleAddToCart} onGoArsenal={goArsenal} onContact={() => setContactOpen(true)} />}
-      {tab === 'arsenal' && <ArsenalScreen weapons={WEAPONS} onOpenWeapon={openWeapon} onAddToCart={handleAddToCart} />}
-      {tab === 'cart' && <CartScreen cart={cart} total={total} checkingOut={checkingOut} onRemove={removeFromCart} onCheckout={handleCheckoutFromCart} onGoArsenal={goArsenal} />}
+      {tab === 'home' && <HomeScreen weapons={WEAPONS} onOpenWeapon={openWeapon} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} onGoArsenal={goArsenal} onContact={() => setContactOpen(true)} />}
+      {tab === 'arsenal' && <ArsenalScreen weapons={WEAPONS} onOpenWeapon={openWeapon} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} />}
+      {tab === 'cart' && <CartScreen cart={cart} total={total} checkingOut={checkingOut} onRemove={removeFromCart} onInc={increment} onDec={decrement} onCheckout={handleCheckoutFromCart} onGoArsenal={goArsenal} />}
       {tab === 'help' && <HelpScreen onContact={() => setContactOpen(true)} onOpenLegal={() => setLegalOpen(true)} />}
 
       {/* Weapon inspector overlay */}

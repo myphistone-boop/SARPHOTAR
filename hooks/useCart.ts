@@ -39,6 +39,16 @@ export const useCart = () => {
     setCart(prev => prev.filter(item => item.id !== id));
   };
 
+  const increment = (id: string) => {
+    setCart(prev => prev.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
+  };
+
+  const decrement = (id: string) => {
+    setCart(prev => prev
+      .map(item => item.id === id ? { ...item, quantity: item.quantity - 1 } : item)
+      .filter(item => item.quantity > 0));
+  };
+
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem('novelec_cart');
@@ -51,6 +61,8 @@ export const useCart = () => {
     cart,
     addToCart,
     removeFromCart,
+    increment,
+    decrement,
     clearCart,
     total,
     count,

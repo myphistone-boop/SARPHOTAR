@@ -1,14 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import { Weapon } from '../data/catalog';
 import { StatTriplet } from '../components/StatBars';
+import { DiscountBadge } from '../components/Trust';
 
 interface ArsenalScreenProps {
   weapons: Weapon[];
   onOpenWeapon: (w: Weapon) => void;
   onAddToCart: (w: Weapon) => void;
+  onBuyNow: (w: Weapon) => void;
 }
 
-export const ArsenalScreen: React.FC<ArsenalScreenProps> = ({ weapons, onOpenWeapon, onAddToCart }) => {
+export const ArsenalScreen: React.FC<ArsenalScreenProps> = ({ weapons, onOpenWeapon, onAddToCart, onBuyNow }) => {
   const classes = useMemo(() => ['TOUS', ...Array.from(new Set(weapons.map((w) => w.meta.klass)))], [weapons]);
   const [filter, setFilter] = useState('TOUS');
   const list = filter === 'TOUS' ? weapons : weapons.filter((w) => w.meta.klass === filter);
@@ -41,9 +43,10 @@ export const ArsenalScreen: React.FC<ArsenalScreenProps> = ({ weapons, onOpenWea
       <div className="max-w-2xl mx-auto px-5 pt-4 space-y-4">
         {list.map((w, idx) => (
           <div key={w.id} className="bg-surface border border-white/10 rounded-xl2 overflow-hidden shadow-card edge-top animate-rise" style={{ animationDelay: `${idx * 60}ms` }}>
-            <div className="flex items-center justify-between px-4 pt-3.5">
+            <div className="flex items-center gap-2 px-4 pt-3.5">
               <span className="font-hud text-[9px] font-semibold tracking-[0.25em] px-2 py-1 rounded" style={{ color: w.meta.rarityColor, background: `${w.meta.rarityColor}1A`, border: `1px solid ${w.meta.rarityColor}44` }}>{w.meta.rarity}</span>
-              <span className="font-hud text-[9px] tracking-[0.2em] text-muted">{w.meta.klass} · NIV {String(idx + 1).padStart(2, '0')}</span>
+              <DiscountBadge price={w.price} original={w.originalPrice} />
+              <span className="ml-auto font-hud text-[9px] tracking-[0.2em] text-muted">{w.meta.klass} · NIV {String(idx + 1).padStart(2, '0')}</span>
             </div>
 
             <button onClick={() => onOpenWeapon(w)} className="relative w-full aspect-[4/3] mt-1 block">
@@ -68,7 +71,7 @@ export const ArsenalScreen: React.FC<ArsenalScreenProps> = ({ weapons, onOpenWea
               </div>
               <div className="grid grid-cols-[1fr_1.5fr] gap-2">
                 <button onClick={() => onAddToCart(w)} className="font-hud text-[11px] uppercase tracking-[0.14em] py-3 rounded-xl border border-white/15 text-ghost hover:border-accent hover:text-accent transition-colors active:scale-95">+ Panier</button>
-                <button onClick={() => onOpenWeapon(w)} className="font-hud text-[11px] uppercase tracking-[0.14em] py-3 rounded-xl bg-ghost text-carbon hover:shadow-[0_0_18px_rgba(255,255,255,0.3)] transition-all active:scale-95">Inspecter</button>
+                <button onClick={() => onBuyNow(w)} className="font-hud text-[11px] uppercase tracking-[0.14em] py-3 rounded-xl bg-accent text-carbon hover:shadow-glow transition-all active:scale-95">Acheter</button>
               </div>
             </div>
           </div>

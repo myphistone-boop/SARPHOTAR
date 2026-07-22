@@ -1,17 +1,20 @@
 import React from 'react';
 import { CartItem } from '../types';
 import { Button } from '../components/ui/Button';
+import { PaymentRow, Guarantee } from '../components/Trust';
 
 interface CartScreenProps {
   cart: CartItem[];
   total: number;
   checkingOut: boolean;
   onRemove: (id: string) => void;
+  onInc: (id: string) => void;
+  onDec: (id: string) => void;
   onCheckout: () => void;
   onGoArsenal: () => void;
 }
 
-export const CartScreen: React.FC<CartScreenProps> = ({ cart, total, checkingOut, onRemove, onCheckout, onGoArsenal }) => {
+export const CartScreen: React.FC<CartScreenProps> = ({ cart, total, checkingOut, onRemove, onInc, onDec, onCheckout, onGoArsenal }) => {
   const count = cart.reduce((a, i) => a + i.quantity, 0);
   return (
     <div className="screen-in pb-tabbar min-h-screen">
@@ -47,7 +50,15 @@ export const CartScreen: React.FC<CartScreenProps> = ({ cart, total, checkingOut
                       <p className="font-hud text-[10px] text-muted uppercase tracking-wider mt-1">{item.tagline}</p>
                     </div>
                     <div className="flex items-center justify-between mt-2">
-                      <div className="font-hud text-[11px] text-muted bg-black/40 px-2 py-1 rounded border border-white/5">QTÉ <span className="text-ghost">{item.quantity}</span></div>
+                      <div className="flex items-center gap-1 bg-black/40 rounded-lg border border-white/8 p-0.5">
+                        <button onClick={() => onDec(item.id)} aria-label="Diminuer" className="w-7 h-7 grid place-items-center rounded-md text-ghost hover:bg-white/10 active:scale-90 transition-all">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                        </button>
+                        <span className="font-hud text-sm text-ghost w-6 text-center">{item.quantity}</span>
+                        <button onClick={() => onInc(item.id)} aria-label="Augmenter" className="w-7 h-7 grid place-items-center rounded-md text-ghost hover:bg-white/10 active:scale-90 transition-all">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                        </button>
+                      </div>
                       <button onClick={() => onRemove(item.id)} className="font-hud text-[10px] uppercase tracking-widest text-danger hover:text-danger/80 transition-colors flex items-center gap-1">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /></svg> Retirer
                       </button>
@@ -63,6 +74,8 @@ export const CartScreen: React.FC<CartScreenProps> = ({ cart, total, checkingOut
               <Button variant="accent" fullWidth onClick={onCheckout} disabled={checkingOut}>
                 {checkingOut ? 'Connexion Stripe…' : 'Procéder au paiement'}
               </Button>
+              <PaymentRow className="mt-3 justify-center" />
+              <Guarantee className="mt-2 justify-center" />
             </div>
           </>
         )}

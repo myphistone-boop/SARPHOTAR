@@ -3,6 +3,7 @@ import { Weapon } from '../data/catalog';
 import { getReviewsForProduct } from '../constants';
 import { WeaponViewer } from '../components/WeaponViewer';
 import { StatBar, STAT_META } from '../components/StatBars';
+import { DiscountBadge, PaymentRow, Guarantee } from '../components/Trust';
 
 interface WeaponScreenProps {
   weapon: Weapon;
@@ -91,6 +92,7 @@ export const WeaponScreen: React.FC<WeaponScreenProps> = ({ weapon, weapons, onB
               <div className="flex items-baseline gap-2.5">
                 <span className="text-4xl font-black font-display text-ghost leading-none">{weapon.price}€</span>
                 {weapon.originalPrice && <span className="text-base text-muted line-through decoration-danger decoration-2">{weapon.originalPrice}€</span>}
+                <DiscountBadge price={weapon.price} original={weapon.originalPrice} />
               </div>
             </div>
             <span className="inline-flex items-center gap-1.5 bg-good/10 border border-good/30 px-2 py-1 rounded text-good">
@@ -101,6 +103,8 @@ export const WeaponScreen: React.FC<WeaponScreenProps> = ({ weapon, weapons, onB
             <button onClick={() => onAddToCart(weapon)} className="font-hud text-xs uppercase tracking-[0.14em] py-3.5 rounded-xl border border-white/15 text-ghost hover:border-accent hover:text-accent transition-colors active:scale-95">Panier</button>
             <button onClick={() => onBuyNow(weapon)} className="font-hud text-sm uppercase tracking-[0.14em] py-3.5 rounded-xl bg-accent text-carbon hover:shadow-glow transition-all active:scale-95">Acheter</button>
           </div>
+          <PaymentRow className="mt-3 justify-center" />
+          <Guarantee className="mt-2 justify-center" />
         </div>
 
         {/* stats */}
