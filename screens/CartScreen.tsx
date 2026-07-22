@@ -37,7 +37,7 @@ export const CartScreen: React.FC<CartScreenProps> = ({ cart, total, checkingOut
             <div className="space-y-3">
               {cart.map((item) => (
                 <div key={item.id} className="flex gap-4 bg-surface border border-white/8 p-3 rounded-xl edge-top">
-                  <div className="w-20 h-20 bg-black/40 border border-white/5 rounded-lg grid place-items-center shrink-0 p-1"><img src={item.image} alt={item.name} loading="lazy" className="w-full h-full object-contain" /></div>
+                  <div className="w-20 h-20 bg-black/40 border border-white/5 rounded-lg grid place-items-center shrink-0 p-1"><img src={item.image} alt={item.name} loading="lazy" className="mask-orb-sm w-full h-full object-contain" /></div>
                   <div className="flex-1 flex flex-col justify-between py-0.5">
                     <div>
                       <div className="flex justify-between items-start gap-3">

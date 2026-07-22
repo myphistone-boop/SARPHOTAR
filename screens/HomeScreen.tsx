@@ -71,7 +71,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
         <button onClick={() => onOpenWeapon(featured)} className="w-full text-left bg-surface border border-white/10 rounded-xl2 overflow-hidden shadow-card edge-top">
           <div className="relative aspect-[16/10] dot-grid" style={{ ['--tw' as string]: featured.meta.rarityColor }}>
             <div className="absolute inset-0" style={{ background: `radial-gradient(60% 60% at 50% 55%, ${featured.meta.rarityColor}22, transparent 70%)` }} />
-            <img src={featured.image} alt={featured.name} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-contain p-6 animate-float [filter:drop-shadow(0_20px_36px_rgba(0,0,0,0.7))]" />
+            <img src={featured.image} alt={featured.name} loading="lazy" decoding="async" className="mask-orb absolute inset-0 w-full h-full object-contain p-6 animate-float" />
+            <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(74% 66% at 50% 42%, transparent 55%, #141619 92%)' }} />
             <span className="absolute top-3 left-3 font-hud text-[9px] font-semibold tracking-[0.25em] px-2 py-1 rounded" style={{ color: featured.meta.rarityColor, background: `${featured.meta.rarityColor}1A`, border: `1px solid ${featured.meta.rarityColor}44` }}>{featured.meta.rarity}</span>
           </div>
           <div className="p-5">
@@ -99,7 +100,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
           {weapons.map((w) => (
             <button key={w.id} onClick={() => onOpenWeapon(w)} className="snap-start shrink-0 w-40 bg-surface border border-white/10 rounded-xl overflow-hidden text-left active:scale-[0.98] transition-transform edge-top">
               <div className="relative aspect-square dot-grid">
-                <img src={w.image} alt={w.name} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-contain p-3" />
+                <img src={w.image} alt={w.name} loading="lazy" decoding="async" className="mask-orb-sm absolute inset-0 w-full h-full object-contain p-3" />
                 <span className="absolute top-2 left-2 font-hud text-[8px] tracking-[0.2em] px-1.5 py-0.5 rounded" style={{ color: w.meta.rarityColor, background: `${w.meta.rarityColor}1A` }}>{w.meta.klass}</span>
               </div>
               <div className="p-3">

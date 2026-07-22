@@ -57,7 +57,7 @@ export const WeaponScreen: React.FC<WeaponScreenProps> = ({ weapon, weapons, onB
               <div className="absolute top-full left-0 right-0 mt-2 bg-surface border border-white/10 rounded-xl shadow-card overflow-hidden z-40 animate-rise">
                 {weapons.map((w) => (
                   <button key={w.id} onClick={() => { onSwitch(w); setSwitcher(false); }} className={`w-full flex items-center gap-3 p-2.5 text-left border-b border-white/5 last:border-0 ${w.id === weapon.id ? 'bg-white/10' : 'hover:bg-white/5'}`}>
-                    <div className="w-11 h-11 bg-black/40 rounded-lg p-1 grid place-items-center border border-white/5"><img src={w.image} alt={w.name} loading="lazy" className="w-full h-full object-contain" /></div>
+                    <div className="w-11 h-11 bg-black/40 rounded-lg p-1 grid place-items-center border border-white/5"><img src={w.image} alt={w.name} loading="lazy" className="mask-orb-sm w-full h-full object-contain" /></div>
                     <div className="min-w-0"><div className="text-sm font-black italic uppercase font-display text-ghost truncate">{w.name}</div><div className="font-hud text-[9px] text-muted tracking-wider">{w.meta.klass}</div></div>
                     <span className="ml-auto font-hud text-sm text-accent">{w.price}€</span>
                   </button>

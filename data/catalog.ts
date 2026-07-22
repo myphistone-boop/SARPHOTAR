@@ -10,12 +10,12 @@ export interface WeaponMeta {
 
 // Métadonnées d'affichage indexées par id produit (les id restent ceux de Stripe).
 const META: Record<string, WeaponMeta> = {
-  'pistol-novelec': { klass: 'SIDEARM', rarity: 'RARE', rarityColor: '#38E1F0', order: 1 },
-  'ciovelec-rifle': { klass: 'FUSIL', rarity: 'EPIC', rarityColor: '#8A6BFF', order: 2 },
-  'novelec-gatling': { klass: 'LOURD', rarity: 'LÉGENDAIRE', rarityColor: '#FF6A2C', order: 3 },
+  'pistol-novelec': { klass: 'SIDEARM', rarity: 'RARE', rarityColor: '#93B2C6', order: 1 },
+  'ciovelec-rifle': { klass: 'FUSIL', rarity: 'EPIC', rarityColor: '#B4A7E2', order: 2 },
+  'novelec-gatling': { klass: 'LOURD', rarity: 'LÉGENDAIRE', rarityColor: '#E7E9ED', order: 3 },
 };
 
-const DEFAULT_META: WeaponMeta = { klass: 'ARME', rarity: 'RARE', rarityColor: '#FF6A2C', order: 99 };
+const DEFAULT_META: WeaponMeta = { klass: 'ARME', rarity: 'RARE', rarityColor: '#CAD2DA', order: 99 };
 
 export interface Weapon extends Product {
   meta: WeaponMeta;

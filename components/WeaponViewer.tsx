@@ -14,7 +14,7 @@ interface WeaponViewerProps {
  * Pseudo-3D weapon inspector — no extra assets required.
  * Drag = rotate turntable · pinch/wheel/double-tap = zoom+pan · hover = parallax + gloss · idle = sway/float.
  */
-export const WeaponViewer: React.FC<WeaponViewerProps> = ({ images, name, index, onIndexChange, introKey, accent = '#FF6A2C', className = '' }) => {
+export const WeaponViewer: React.FC<WeaponViewerProps> = ({ images, name, index, onIndexChange, introKey, accent = '#CAD2DA', className = '' }) => {
   const stageRef = useRef<HTMLDivElement>(null);
   const objRef = useRef<HTMLDivElement>(null);
   const glossRef = useRef<HTMLDivElement>(null);
@@ -154,8 +154,8 @@ export const WeaponViewer: React.FC<WeaponViewerProps> = ({ images, name, index,
         <div ref={objRef} className={`relative w-[86%] h-[78%] max-w-[640px] will-change-transform ${intro ? 'animate-[introZoom_0.6s_cubic-bezier(0.16,1,0.3,1)_both]' : ''}`} style={{ transformStyle: 'preserve-3d' }}>
           {images.map((src, i) => (
             <img key={src} src={src} alt={`${name} — vue ${i + 1}`} draggable={false} loading={i === 0 ? 'eager' : 'lazy'} decoding="async"
-              className="absolute inset-0 w-full h-full object-contain transition-opacity duration-500 pointer-events-none"
-              style={{ opacity: i === index ? 1 : 0, filter: 'drop-shadow(0 30px 45px rgba(0,0,0,0.7))' }} />
+              className="mask-orb absolute inset-0 w-full h-full object-contain transition-opacity duration-500 pointer-events-none"
+              style={{ opacity: i === index ? 1 : 0, filter: 'drop-shadow(0 24px 40px rgba(0,0,0,0.7))' }} />
           ))}
           <div ref={glossRef} className="absolute inset-0 pointer-events-none mix-blend-screen opacity-70" />
         </div>
