@@ -4,6 +4,9 @@ import { FAQ_ITEMS } from '../constants';
 import { StatTriplet } from '../components/StatBars';
 import { Button } from '../components/ui/Button';
 import { DiscountBadge, Guarantee } from '../components/Trust';
+import { HeroWeapon } from '../components/HeroWeapon';
+
+const HERO_PISTOL = '/hero/pistolet.webp';
 
 interface HomeScreenProps {
   weapons: Weapon[];
@@ -21,20 +24,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
   const featured = weapons[featIdx] ?? weapons[0];
   const featPrev = () => setFeatIdx((i) => (i - 1 + count) % count);
   const featNext = () => setFeatIdx((i) => (i + 1) % count);
+  const pistol = weapons.find((w) => w.id === 'pistol-novelec') ?? weapons[0];
 
   return (
     <div className="screen-in pb-tabbar">
-      {/* HERO */}
-      <section className="relative h-[86vh] min-h-[560px] overflow-hidden">
-        <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop" alt="" className="w-full h-full object-cover brightness-[0.4] saturate-[0.8] scale-105 animate-slow-zoom" />
-          <div className="absolute inset-0 bg-gradient-to-t from-carbon via-carbon/55 to-carbon/25" />
-          <div className="absolute inset-0 carbon-soft" />
-          <div className="absolute inset-0 tech-grid opacity-30 animate-grid-pan" />
+      {/* HERO — rotating pistol showcase */}
+      <section className="relative h-[94vh] min-h-[660px] flex flex-col overflow-hidden">
+        {/* backdrop */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 tech-grid opacity-20 animate-grid-pan" />
+          <div className="absolute inset-0" style={{ background: `radial-gradient(58% 42% at 50% 38%, ${pistol.meta.rarityColor}1F, transparent 72%)` }} />
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-carbon to-transparent" />
         </div>
 
         {/* top status */}
-        <div className="app-chrome absolute top-0 inset-x-0 z-20 pt-safe">
+        <div className="app-chrome relative z-20 pt-safe shrink-0">
           <div className="max-w-2xl mx-auto flex items-center justify-between px-5 h-14">
             <div className="flex items-center gap-2.5">
               <span className="grid place-items-center w-8 h-8 rounded-lg bg-ghost text-carbon font-display font-black italic text-lg leading-none">S</span>
@@ -46,23 +50,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
           </div>
         </div>
 
-        <div className="absolute bottom-0 inset-x-0 p-6 pb-10 z-10 max-w-2xl mx-auto animate-rise">
-          <span className="inline-flex items-center gap-2 mb-4 py-1.5 px-3 rounded-full border border-accent/30 bg-accent/5">
+        {/* rotating pistol */}
+        <button onClick={() => onOpenWeapon(pistol)} className="relative z-10 flex-1 min-h-0 w-full max-w-2xl mx-auto px-4 block">
+          <span className="absolute top-1 left-5 z-10 font-hud text-[9px] font-semibold tracking-[0.25em] px-2 py-1 rounded backdrop-blur-sm" style={{ color: pistol.meta.rarityColor, background: `${pistol.meta.rarityColor}22`, border: `1px solid ${pistol.meta.rarityColor}55` }}>{pistol.meta.rarity}</span>
+          <span className="absolute top-1 right-5 z-10 font-hud text-[10px] font-bold tracking-wider px-2 py-0.5 rounded bg-danger text-white">−30%</span>
+          <HeroWeapon src={HERO_PISTOL} alt={pistol.name} accent={pistol.meta.rarityColor} className="w-full h-full" />
+        </button>
+
+        {/* headline + CTA */}
+        <div className="relative z-10 shrink-0 px-6 pb-8 max-w-2xl mx-auto w-full animate-rise">
+          <span className="inline-flex items-center gap-2 mb-3 py-1.5 px-3 rounded-full border border-accent/30 bg-accent/5">
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-dot" />
             <span className="font-hud text-[10px] uppercase tracking-[0.3em] text-accent">Édition Carbon · 2026</span>
           </span>
-          <h1 className="text-6xl md:text-7xl font-black italic uppercase tracking-tighter leading-[0.82] text-ghost mb-4">
-            RÉALISME<br />QUALITÉ<br /><span className="text-glow text-accent">FUN</span>
+          <h1 className="text-5xl md:text-6xl font-black italic uppercase tracking-tighter leading-[0.85] text-ghost mb-4">
+            RÉALISME<br />QUALITÉ · <span className="text-glow text-accent">FUN</span>
           </h1>
-          <p className="text-base text-ghost/70 mb-6 max-w-md leading-relaxed">
-            L'arsenal électrique de la bataille d'eau. Précision, batterie haute capacité, châssis carbone furtif.
-          </p>
           <div className="flex gap-3">
             <Button variant="accent" onClick={onGoArsenal} className="flex-1">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
               Déployer
             </Button>
-            <Button variant="outline" onClick={() => onOpenWeapon(featured)} className="flex-1">Inspecter</Button>
+            <Button variant="outline" onClick={() => onOpenWeapon(pistol)} className="flex-1">Inspecter</Button>
           </div>
         </div>
       </section>
