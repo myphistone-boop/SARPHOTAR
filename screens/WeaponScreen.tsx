@@ -4,6 +4,7 @@ import { getReviewsForProduct } from '../constants';
 import { WeaponViewer } from '../components/WeaponViewer';
 import { StatBar, STAT_META } from '../components/StatBars';
 import { DiscountBadge, PaymentRow, Guarantee } from '../components/Trust';
+import { PromoStrip } from '../components/PromoTimer';
 
 interface WeaponScreenProps {
   weapon: Weapon;
@@ -82,7 +83,9 @@ export const WeaponScreen: React.FC<WeaponScreenProps> = ({ weapon, weapons, onB
           <span className="font-hud text-[10px] tracking-[0.2em] text-muted">{weapon.meta.klass} · WEAPON LVL {String(weapons.findIndex(w=>w.id===weapon.id)+1).padStart(2,'0')}</span>
         </div>
         <h1 className="text-5xl font-black italic uppercase font-display tracking-tighter text-ghost leading-[0.85] mb-1 animate-rise">{weapon.name}</h1>
-        <p className="font-hud text-xs tracking-[0.2em] uppercase text-muted mb-5">{weapon.tagline}</p>
+        <p className="font-hud text-xs tracking-[0.2em] uppercase text-muted mb-4">{weapon.tagline}</p>
+
+        <PromoStrip className="mb-4" />
 
         {/* price card */}
         <div className="bg-surface border border-white/10 rounded-xl2 p-5 mb-6 brackets edge-top">

@@ -5,6 +5,7 @@ import { StatTriplet } from '../components/StatBars';
 import { Button } from '../components/ui/Button';
 import { DiscountBadge, Guarantee, CertBadges, PaymentRow } from '../components/Trust';
 import { ReviewsPill } from '../components/ReviewsPill';
+import { PromoBanner } from '../components/PromoTimer';
 
 interface HomeScreenProps {
   weapons: Weapon[];
@@ -66,6 +67,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ weapons, onOpenWeapon, o
             <Button variant="outline" onClick={() => onOpenWeapon(featured)} className="flex-1">Inspecter</Button>
           </div>
         </div>
+      </section>
+
+      {/* PROMO FLASH */}
+      <section className="px-5 mt-4 max-w-2xl mx-auto">
+        <PromoBanner />
       </section>
 
       {/* FEATURED */}
