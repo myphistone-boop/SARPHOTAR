@@ -1,13 +1,13 @@
 import React from 'react';
 
-// Promo commerciale affichée (fixe), indépendante du calcul exact.
-export const PROMO_PCT = 30;
-
 export const DiscountBadge: React.FC<{ price: number; original?: number; className?: string }> = ({ price, original, className = '' }) => {
   if (!original || original <= price) return null;
+  // % réel arrondi à la dizaine la plus proche (chiffre rond, proche du réel)
+  const pct = Math.round(((1 - price / original) * 100) / 10) * 10;
+  if (pct <= 0) return null;
   return (
     <span className={`font-hud text-[10px] font-bold tracking-wider px-2 py-0.5 rounded bg-danger text-white ${className}`}>
-      −{PROMO_PCT}%
+      −{pct}%
     </span>
   );
 };
