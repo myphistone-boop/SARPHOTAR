@@ -25,13 +25,17 @@ declare global {
     __sarphotarLoadGoogle?: () => void;
     gtag?: (...args: unknown[]) => void;
     dataLayer?: unknown[];
+    // TikTok
+    TIKTOK_PIXEL_ID?: string;
+    __sarphotarLoadTikTok?: () => void;
+    ttq?: { track?: (...args: unknown[]) => void; page?: () => void };
   }
 }
 
-/** Vrai si au moins un traceur (Meta ou Google) est configuré. */
+/** Vrai si au moins un traceur (Meta, Google ou TikTok) est configuré. */
 export function trackersConfigured(): boolean {
   if (typeof window === 'undefined') return false;
-  return Boolean(window.PIXEL_ID || window.GA4_ID || window.GADS_ID);
+  return Boolean(window.PIXEL_ID || window.GA4_ID || window.GADS_ID || window.TIKTOK_PIXEL_ID);
 }
 
 /** Choix déjà exprimé par le visiteur, ou null s'il ne s'est pas prononcé. */
@@ -64,6 +68,7 @@ export function loadTrackers(): void {
   try {
     window.__sarphotarLoadPixel?.();
     window.__sarphotarLoadGoogle?.();
+    window.__sarphotarLoadTikTok?.();
   } catch {
     /* le suivi ne doit jamais casser la boutique */
   }

@@ -11,6 +11,14 @@ const FB_MAP: Record<string, string> = {
   purchase: 'Purchase',
 };
 
+// TikTok, canal principal de la boutique. Mêmes événements, noms TikTok.
+const TT_MAP: Record<string, string> = {
+  view_item: 'ViewContent',
+  add_to_cart: 'AddToCart',
+  begin_checkout: 'InitiateCheckout',
+  purchase: 'CompletePayment',
+};
+
 export function track(event: string, params: Params = {}): void {
   if (typeof window === 'undefined') return;
   try {
@@ -23,6 +31,15 @@ export function track(event: string, params: Params = {}): void {
     }
     if (typeof w.gtag === 'function') {
       w.gtag('event', event, params);
+    }
+    if (w.ttq && typeof w.ttq.track === 'function' && TT_MAP[event]) {
+      const items = Array.isArray((params as any).items) ? (params as any).items : [];
+      w.ttq.track(TT_MAP[event], {
+        content_type: 'product',
+        currency: (params as any).currency || 'EUR',
+        ...((params as any).value != null ? { value: (params as any).value } : {}),
+        ...(items[0]?.item_id ? { content_id: String(items[0].item_id) } : {}),
+      });
     }
   } catch {
     /* never let analytics break the app */

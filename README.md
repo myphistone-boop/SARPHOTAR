@@ -116,7 +116,17 @@ l'en-tête `x-admin-token`. Le destinataire de `/api/contact` et
   (le libellé de la conversion « Achat ») dans `index.html`.
   Où les trouver : Google Ads → Objectifs → Conversions → balise Google (AW-…),
   puis la conversion « Achat » → libellé de conversion.
+- **TikTok Pixel** (canal principal) : `window.TIKTOK_PIXEL_ID` dans `index.html`.
+  Où le trouver : TikTok Ads Manager → Outils → Événements → Web → gérer → ID du pixel.
+  Événements câblés : ViewContent / AddToCart / InitiateCheckout / CompletePayment.
 - Aucun traceur n'est chargé sans le consentement du visiteur.
+
+### Canal : TikTok
+- Mets le lien de ta boutique en bio TikTok. Pour mesurer le trafic TikTok,
+  ajoute `?ref=tiktok` au lien (le site capte le `?ref` et le transmet à Stripe).
+- Pour envoyer une pub/vidéo directement sur un produit : `?p=novelec-gatling`
+  (ouvre la fiche). Pour un angle cadeau : `?gift=1`.
+- Les angles vidéo par période sont dans `content/campaign.ts` (`adAngles`).
 - Événements câblés : `view_item`, `add_to_cart`, `begin_checkout`, `purchase`
   (avec valeur monétaire, nécessaire au calcul du ROAS).
 - Lien profond publicitaire : `?p=<id produit>` ouvre directement la fiche.
