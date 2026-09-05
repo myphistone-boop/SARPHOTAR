@@ -48,4 +48,8 @@ export interface DemoVideo {
  *    description: 'Démonstration du Pistolet NovElec™ : prise en main, tir continu et portée.',
  *  };
  */
-export const demoVideo: DemoVideo | null = null;
+export const demoVideo: DemoVideo | null = {
+  src: '/demo-novelec.mp4',
+  poster: '/demo-poster.jpg',
+  description: 'Le pistolet à eau électrique NovElec™ en action.',
+};
