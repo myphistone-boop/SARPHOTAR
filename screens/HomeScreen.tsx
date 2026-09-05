@@ -65,7 +65,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <header className="app-chrome absolute top-0 inset-x-0 z-20 pt-safe">
           <div className="max-w-2xl mx-auto flex items-center justify-between px-5 h-14">
             <button onClick={onGoHome} aria-label="Accueil Sarphotar" className="flex items-center gap-2.5 active:scale-95 transition-transform">
-              <span className="grid place-items-center w-8 h-8 rounded-lg bg-ghost text-carbon font-display font-black italic text-lg leading-none">S</span>
+              <span className="grid place-items-center w-8 h-8 rounded-lg bg-ghost p-1">
+                <img src="/logo-mark.png" alt="" className="w-full h-full object-contain" />
+              </span>
               <span className="text-base font-black italic tracking-tight font-display text-ghost">SARPHOTAR™</span>
             </button>
             <span className="flex items-center gap-1.5 font-hud text-[9px] tracking-[0.28em] text-accent">
@@ -292,7 +294,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* ─────────────────── FOOTER ─────────────────── */}
       <footer className="mt-12 px-5 py-8 max-w-2xl mx-auto text-center border-t border-white/8">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="grid place-items-center w-7 h-7 rounded-md bg-ghost text-carbon font-display font-black italic text-base leading-none">S</span>
+          <span className="grid place-items-center w-7 h-7 rounded-md bg-ghost p-1">
+            <img src="/logo-mark.png" alt="" className="w-full h-full object-contain" />
+          </span>
           <span className="text-xl font-black italic font-display text-ghost">SARPHOTAR™</span>
         </div>
         <p className="text-xs text-muted mb-5">Pistolets à eau électriques rechargeables</p>

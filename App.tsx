@@ -166,7 +166,9 @@ function App() {
       {booting && (
         <div className="fixed inset-0 z-[200] bg-carbon carbon grid place-items-center animate-fade">
           <div className="flex items-center gap-3">
-            <div className="grid place-items-center w-12 h-12 rounded-xl bg-ghost text-carbon font-display font-black italic text-2xl leading-none shadow-glow">S</div>
+            <div className="grid place-items-center w-12 h-12 rounded-xl bg-ghost shadow-glow p-2">
+              <img src="/logo-mark.png" alt="Sarphotar" className="w-full h-full object-contain" />
+            </div>
             <div className="font-display text-2xl font-black italic uppercase tracking-tight text-ghost">SARPHOTAR™</div>
           </div>
         </div>
