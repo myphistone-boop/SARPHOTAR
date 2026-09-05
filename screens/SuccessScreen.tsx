@@ -35,7 +35,7 @@ export const SuccessScreen: React.FC<SuccessScreenProps> = ({ orderNumber, onClo
 
         <div className="bg-surface2 border border-white/10 rounded-xl p-4 mb-8 text-left space-y-2">
           <p className="font-hud text-[10px] uppercase tracking-[0.2em] text-good mb-1">
-            Expédition sous {SHIPPING.handling}
+            Réception estimée sous {SHIPPING.deliveryEstimate}
           </p>
           <p className="text-sm text-ghost/80">Un e-mail de confirmation vous est envoyé.</p>
           <p className="text-sm text-ghost/80">

@@ -91,7 +91,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // --- Customisation UX ---
       custom_text: {
         shipping_address: {
-          message: process.env.DELIVERY_DELAY_TEXT || 'Livraison packée sous 1 à 2 jours ouvrés'
+          // Doit rester coherent avec SHIPPING.deliveryEstimate (content/facts.ts) :
+          // c'est la derniere information que le client lit avant de payer.
+          message: process.env.DELIVERY_DELAY_TEXT || 'Livraison offerte · réception sous 10 à 15 jours'
         },
         submit: {
             message: 'Payer et Commander'

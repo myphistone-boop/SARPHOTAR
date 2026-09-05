@@ -81,7 +81,7 @@ const Cgv: React.FC = () => (
     <p><strong className="text-ghost">2. Prix</strong><br />Les prix sont indiqués en euros toutes taxes comprises. Le prix applicable est celui affiché au moment de la validation de la commande. {SHIPPING.free ? 'Les frais de livraison sont offerts.' : 'Les frais de livraison sont indiqués avant validation.'}</p>
     <p><strong className="text-ghost">3. Commande</strong><br />La commande est validée après acceptation du paiement. Un e-mail de confirmation reprenant la référence de commande vous est adressé.</p>
     <p><strong className="text-ghost">4. Paiement</strong><br />Le règlement s’effectue par carte bancaire via la plateforme sécurisée Stripe. Aucune coordonnée bancaire n’est conservée par {LEGAL_ENTITY.siteName}.</p>
-    <p><strong className="text-ghost">5. Livraison</strong><br />Les commandes sont préparées et expédiées sous {SHIPPING.handling}. Zones desservies : {SHIPPING.countries.join(', ')}.</p>
+    <p><strong className="text-ghost">5. Livraison</strong><br />Le délai de réception est estimé à {SHIPPING.deliveryEstimate} à compter de la validation de la commande. Les commandes sont préparées et expédiées sous {SHIPPING.handling}. Zones desservies : {SHIPPING.countries.join(', ')}. Conformément à l’article L216-2 du code de la consommation, en cas de dépassement du délai annoncé, vous pouvez demander la résolution de la commande.</p>
     <p><strong className="text-ghost">6. Droit de rétractation</strong><br />Vous disposez de {RETURNS.withdrawalDays} jours à compter de la réception pour exercer votre droit de rétractation, sans avoir à motiver votre décision (art. L221-18 du code de la consommation).</p>
     <p><strong className="text-ghost">7. Garanties</strong><br />Tous les produits bénéficient de la garantie légale de conformité ({WARRANTY.legalConformityYears} ans, art. L217-3 et suivants) et de la garantie contre les vices cachés (art. 1641 du code civil).</p>
     <p><strong className="text-ghost">8. Réclamations</strong><br />Toute réclamation peut être adressée à <a href={`mailto:${SUPPORT.email}`} className="text-accent underline">{SUPPORT.email}</a>.</p>
@@ -115,7 +115,7 @@ const Refund: React.FC = () => (
 const Shipping: React.FC = () => (
   <>
     <p><strong className="text-ghost">1. Zones desservies</strong><br />{SHIPPING.countries.join(', ')}.</p>
-    <p><strong className="text-ghost">2. Préparation et expédition</strong><br />Les commandes sont préparées et expédiées sous {SHIPPING.handling}.{SHIPPING.carrier ? ` Elles sont acheminées par ${SHIPPING.carrier}.` : ''}</p>
+    <p><strong className="text-ghost">2. Délai de réception</strong><br />Comptez {SHIPPING.deliveryEstimate} entre la validation de votre commande et sa réception. Les commandes sont préparées et expédiées sous {SHIPPING.handling}.{SHIPPING.carrier ? ` Elles sont ensuite acheminées par ${SHIPPING.carrier}.` : ''}</p>
     <p><strong className="text-ghost">3. Frais</strong><br />{SHIPPING.free ? 'Les frais de livraison sont offerts.' : 'Les frais de livraison sont indiqués avant la validation de la commande.'}</p>
     <p><strong className="text-ghost">4. Suivi</strong><br />{SHIPPING.trackingAlways ? 'Un numéro de suivi vous est communiqué dès l’expédition.' : 'Un numéro de suivi vous est communiqué lorsqu’il est disponible.'}</p>
     <p><strong className="text-ghost">5. Retard ou colis non reçu</strong><br />En cas de retard, écrivez-nous à <a href={`mailto:${SUPPORT.email}`} className="text-accent underline">{SUPPORT.email}</a> en précisant votre référence de commande.</p>

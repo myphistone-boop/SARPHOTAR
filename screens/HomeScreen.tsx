@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Weapon } from '../data/catalog';
 import { FAQ } from '../content/faq';
 import { campaign } from '../content/campaign';
-import { SUPPORT } from '../content/facts';
+import { SUPPORT, SHIPPING } from '../content/facts';
 import { StatTriplet } from '../components/StatBars';
 import { Button } from '../components/ui/Button';
 import { Icon } from '../components/Icon';
@@ -107,7 +107,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {/* réassurance immédiate sous les CTA */}
           <div className="flex items-center gap-3 flex-wrap mt-3 font-hud text-[9px] tracking-wide text-ghost/50">
             <span className="flex items-center gap-1"><Icon name="lock" size={11} strokeWidth={2} /> Paiement sécurisé</span>
-            <span className="flex items-center gap-1"><Icon name="truck" size={11} strokeWidth={2} /> Livraison offerte</span>
+            <span className="flex items-center gap-1"><Icon name="truck" size={11} strokeWidth={2} /> Livraison offerte · {SHIPPING.deliveryEstimate}</span>
             <span className="flex items-center gap-1"><Icon name="return" size={11} strokeWidth={2} /> Retours sous conditions</span>
           </div>
         </div>

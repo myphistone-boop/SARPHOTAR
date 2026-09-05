@@ -87,12 +87,11 @@ export const Guarantee: React.FC<{ className?: string }> = ({ className = '' }) 
       <Icon name="return" size={12} strokeWidth={2} className="text-good" />
       Rétractation {RETURNS.withdrawalDays} jours
     </span>
-    {SHIPPING.free && (
-      <span className="flex items-center gap-1">
-        <Icon name="truck" size={12} strokeWidth={2} className="text-good" />
-        Livraison offerte
-      </span>
-    )}
+    <span className="flex items-center gap-1">
+      <Icon name="truck" size={12} strokeWidth={2} className="text-good" />
+      {SHIPPING.free ? 'Livraison offerte · ' : 'Livraison '}
+      {SHIPPING.deliveryEstimate}
+    </span>
   </div>
 );
 
@@ -132,7 +131,7 @@ function buildSeals(): Seal[] {
   if (SHIPPING.free) {
     seals.push({
       title: 'LIVRAISON OFFERTE',
-      sub: SHIPPING.countries.join(' · '),
+      sub: `Réception sous ${SHIPPING.deliveryEstimate}`,
       ring: '#37E29A',
       icon: (<><rect x="1" y="3" width="15" height="13" rx="1" /><path d="M16 8h4l3 3v5h-7z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></>),
     });
@@ -211,10 +210,13 @@ export const ReassuranceGrid: React.FC<{ className?: string }> = ({ className = 
     },
     {
       icon: 'truck' as const,
-      title: SHIPPING.free ? 'Livraison offerte' : 'Livraison suivie',
-      body: SHIPPING.trackingAlways
-        ? `Expédition sous ${SHIPPING.handling}, avec numéro de suivi.`
-        : `Expédition sous ${SHIPPING.handling}. Suivez votre commande lorsqu’un suivi est disponible.`,
+      title: SHIPPING.free ? 'Livraison offerte' : 'Livraison',
+      body: [
+        `Réception sous ${SHIPPING.deliveryEstimate} en moyenne.`,
+        SHIPPING.trackingAlways
+          ? 'Un numéro de suivi vous est transmis dès l’expédition.'
+          : 'Suivez votre commande lorsqu’un suivi est disponible.',
+      ].join(' '),
     },
     {
       icon: 'return' as const,

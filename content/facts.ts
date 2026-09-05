@@ -143,18 +143,33 @@ export const SHIPPING = {
   free: true,
 
   /**
-   * Repris de `custom_text` dans api/create-checkout-session.ts, qui est ce que
-   * le client lit déjà au moment de payer. Les deux doivent rester cohérents.
-   * À CONFIRMER auprès du transporteur si vous voulez annoncer plus précis.
+   * Délai de PRÉPARATION avant remise au transporteur.
    */
   handling: '1 à 2 jours ouvrés',
+
+  /**
+   * Délai TOTAL entre la commande et la réception par le client.
+   *
+   * Approvisionnement en dropshipping : compter une douzaine de jours.
+   * La fourchette est volontairement un peu large pour absorber les aléas —
+   * mieux vaut annoncer 15 et livrer en 10 que l'inverse.
+   *
+   * ⚠️  Ce délai doit être annoncé AVANT l'achat, pas seulement sur l'écran de
+   * confirmation (art. L216-1 du code de la consommation). C'est aussi le
+   * meilleur moyen d'éviter les litiges et les impayés : un client qui a lu
+   * « 12 jours » avant de payer attend, un client qui croyait recevoir en 48 h
+   * ouvre un litige au cinquième jour.
+   *
+   * Au-delà de 30 jours, le client peut annuler sa commande de plein droit.
+   */
+  deliveryEstimate: '10 à 15 jours',
 
   /** Pays réellement livrés — repris de shipping_address_collection (Stripe). */
   countries: ['France', 'Belgique', 'Suisse'],
 
   /**
-   * À CONFIRMER — transporteur(s) réellement utilisé(s) et délai d'acheminement.
-   * Le texte des CGV mentionne « Colissimo, Chronopost » : à valider avant
+   * À CONFIRMER — transporteur(s) réellement utilisé(s) pour la remise finale.
+   * Le texte des CGV mentionnait « Colissimo, Chronopost » : à valider avant
    * de le réafficher comme une promesse.
    */
   carrier: null as string | null,

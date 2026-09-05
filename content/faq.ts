@@ -95,7 +95,8 @@ export function buildFaq(): FaqItem[] {
     {
       q: 'Quels sont les délais de livraison ?',
       a: [
-        `Votre commande est préparée et expédiée sous ${SHIPPING.handling}.`,
+        `Comptez ${SHIPPING.deliveryEstimate} entre votre commande et sa réception.`,
+        `Elle est préparée et expédiée sous ${SHIPPING.handling}.`,
         SHIPPING.carrier ? `Elle est ensuite acheminée par ${SHIPPING.carrier}.` : null,
         SHIPPING.free ? 'Les frais de livraison sont offerts.' : null,
         `Livraison en ${SHIPPING.countries.join(', ')}.`,
