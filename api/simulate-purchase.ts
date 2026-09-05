@@ -1,6 +1,7 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import nodemailer from 'nodemailer';
+import { requireAdmin } from './_auth.js';
 
 /**
  * Cette fonction est une copie conforme de la logique de production 
@@ -87,6 +88,9 @@ async function sendConfirmationEmail(
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Route de simulation : réservée à l'administration (sinon relais d'e-mail ouvert).
+  if (!requireAdmin(req, res)) return;
+
   const targetEmail = (req.query.to as string) || process.env.MAIL_FROM;
 
   if (!process.env.MAIL_FROM || !process.env.MAIL_APP_PASSWORD) {

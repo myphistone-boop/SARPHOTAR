@@ -1,8 +1,12 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import nodemailer from 'nodemailer';
+import { requireAdmin } from './_auth.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Route de diagnostic : réservée à l'administration (sinon relais d'e-mail ouvert).
+  if (!requireAdmin(req, res)) return;
+
   // On récupère l'email de destination via la query string ou on utilise le MAIL_FROM par défaut
   const targetEmail = (req.query.to as string) || process.env.MAIL_FROM;
 
