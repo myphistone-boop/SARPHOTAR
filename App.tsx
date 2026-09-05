@@ -12,6 +12,7 @@ import { ContactSheet } from './components/ContactSheet';
 import { LegalSheet } from './components/LegalSheet';
 import { StickyCta } from './components/StickyCta';
 import { CookieBanner } from './components/CookieBanner';
+import { EmailCapture } from './components/EmailCapture';
 import { track } from './lib/analytics';
 
 /** Clé de stockage du montant du panier, relu au retour de Stripe. */
@@ -209,6 +210,9 @@ function App() {
       )}
 
       <CookieBanner />
+
+      {/* Un seul popup sur le site, et jamais par-dessus un achat en cours. */}
+      <EmailCapture blocked={Boolean(weapon) || success.open || contactOpen || legalOpen || checkingOut || tab === 'cart'} />
 
       {!weapon && !success.open && <TabBar active={tab} cartCount={count} onChange={changeTab} />}
     </div>
