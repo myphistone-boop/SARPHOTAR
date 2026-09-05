@@ -68,9 +68,25 @@ export const CartScreen: React.FC<CartScreenProps> = ({ cart, total, checkingOut
               ))}
             </div>
 
-            <div className="mt-6 bg-surface border border-white/10 rounded-xl2 p-5 edge-top">
+            {/* Panier moyen : proposer un second exemplaire, réel (incrémente le panier). */}
+            {cart.length > 0 && count < 2 && (
+              <button
+                onClick={() => onInc(cart[0].id)}
+                className="mt-4 w-full flex items-center gap-3 bg-surface border border-accent/25 rounded-xl p-4 text-left edge-top hover:border-accent/50 transition-colors active:scale-[0.99]"
+              >
+                <span className="grid place-items-center w-10 h-10 rounded-lg bg-accent/10 border border-accent/30 text-accent shrink-0">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                </span>
+                <div className="min-w-0">
+                  <div className="text-sm font-black italic uppercase font-display text-ghost leading-tight">Vous jouez à deux ?</div>
+                  <div className="text-[12px] text-muted leading-snug mt-0.5">Ajoutez un second exemplaire : un pour vous, un pour votre adversaire.</div>
+                </div>
+              </button>
+            )}
+
+            <div className="mt-4 bg-surface border border-white/10 rounded-xl2 p-5 edge-top">
               <div className="flex items-center justify-between mb-1"><span className="font-hud text-xs uppercase tracking-[0.2em] text-muted">Sous-total</span><span className="text-2xl font-black font-display text-ghost">{total.toFixed(2)}€</span></div>
-              <p className="font-hud text-[9px] text-muted tracking-wider mb-4">Taxes et port calculés à l'étape suivante · Paiement Stripe sécurisé</p>
+              <p className="font-hud text-[9px] text-muted tracking-wider mb-4">Livraison offerte · réception sous 10 à 15 jours · paiement sécurisé par Stripe</p>
               <Button variant="accent" fullWidth onClick={onCheckout} disabled={checkingOut}>
                 {checkingOut ? 'Redirection en cours' : 'Procéder au paiement'}
               </Button>

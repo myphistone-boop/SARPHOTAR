@@ -151,7 +151,62 @@ export function buildJsonLd(): object[] {
     });
   }
 
+  // Fil d'Ariane : le site est monopage, une seule entrée « Accueil ».
+  graph.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    '@id': `${SITE}/#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE + '/' },
+    ],
+  });
+
   return graph;
+}
+
+/**
+ * Flux produit Google Merchant Center (format RSS 2.0).
+ *
+ * Émis au build sous /merchant-feed.xml. Les prix, la disponibilité et les
+ * images viennent du même catalogue que le site : aucune incohérence possible
+ * entre le site, le flux et les annonces Shopping.
+ *
+ * ⚠️  Avant utilisation dans Merchant Center : renseigner un vrai identifiant
+ * produit (GTIN/EAN du fournisseur) si vous en avez un, sinon Google accepte
+ * `identifier_exists = no` (déjà déclaré ci-dessous).
+ */
+export function buildMerchantFeed(): string {
+  const esc = (s: string) =>
+    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const items = PRODUCTS.map((p) => `
+    <item>
+      <g:id>${esc(p.id)}</g:id>
+      <g:title>${esc(p.name)} — pistolet à eau électrique rechargeable</g:title>
+      <g:description>${esc(`${p.story.line1} ${p.story.line2}`)}</g:description>
+      <g:link>${SITE}/?p=${esc(p.id)}</g:link>
+      <g:image_link>${esc(p.image)}</g:image_link>
+      <g:availability>in_stock</g:availability>
+      <g:price>${p.price.toFixed(2)} EUR</g:price>
+      <g:brand>Sarphotar</g:brand>
+      <g:condition>new</g:condition>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:google_product_category>3287</g:google_product_category>
+      <g:shipping>
+        <g:country>FR</g:country>
+        <g:price>0.00 EUR</g:price>
+      </g:shipping>
+    </item>`).join('');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>${esc(LEGAL_ENTITY.siteName)}</title>
+    <link>${SITE}/</link>
+    <description>Pistolets à eau électriques rechargeables</description>${items}
+  </channel>
+</rss>
+`;
 }
 
 /** Balises injectées dans le <head>. */

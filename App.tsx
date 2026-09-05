@@ -13,10 +13,22 @@ import { LegalSheet } from './components/LegalSheet';
 import { StickyCta } from './components/StickyCta';
 import { CookieBanner } from './components/CookieBanner';
 import { EmailCapture } from './components/EmailCapture';
+import { AnnouncementBar } from './components/AnnouncementBar';
 import { track } from './lib/analytics';
+import { campaign, GIFT_MODE, ANNOUNCEMENTS } from './content/campaign';
 
 /** Clé de stockage du montant du panier, relu au retour de Stripe. */
 const PENDING_VALUE_KEY = 'sarphotar_pending_order_value';
+
+/**
+ * Mode cadeau : renforce le discours « idée cadeau » sur tout le site.
+ * Actif si GIFT_MODE est vrai, si la campagne de Noël est en cours, ou via
+ * l'URL ?gift=1 (pour envoyer une publicité cadeau sans changer la campagne).
+ */
+const GIFT_ACTIVE =
+  GIFT_MODE ||
+  campaign.id === 'christmas' ||
+  (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('gift') === '1');
 
 function App() {
   const [tab, setTab] = useState<Tab>('home');
@@ -72,6 +84,13 @@ function App() {
 
     const order = q.get('order');
 
+    // Anti-doublon : un même achat ne doit être compté qu'une fois, même si la
+    // page de confirmation est rechargée ou remontée. Sans ça, le ROAS gonfle.
+    const dedupeKey = `sarphotar_purchase_tracked_${order ?? 'unknown'}`;
+    const alreadyTracked = (() => {
+      try { return sessionStorage.getItem(dedupeKey) === '1'; } catch { return false; }
+    })();
+
     // Le montant a été mémorisé avant la redirection vers Stripe : sans lui,
     // l'événement d'achat partirait sans valeur et Meta/GA4 ne pourraient
     // calculer ni ROAS ni enchères optimisées.
@@ -80,11 +99,14 @@ function App() {
     sessionStorage.removeItem(PENDING_VALUE_KEY);
 
     setSuccess({ open: true, order });
-    track('purchase', {
-      transaction_id: order,
-      currency: 'EUR',
-      ...(Number.isFinite(value) && value! > 0 ? { value } : {}),
-    });
+    if (!alreadyTracked) {
+      try { sessionStorage.setItem(dedupeKey, '1'); } catch { /* mode privé */ }
+      track('purchase', {
+        transaction_id: order,
+        currency: 'EUR',
+        ...(Number.isFinite(value) && value! > 0 ? { value } : {}),
+      });
+    }
     clearCart();
     window.history.replaceState({}, document.title, window.location.pathname);
   }, [clearCart]);
@@ -135,6 +157,7 @@ function App() {
     track('view_item', { currency: 'EUR', value: w.price, items: [{ item_id: w.id, item_name: w.name, price: w.price }] });
   };
   const goArsenal = () => { setWeapon(null); setTab('arsenal'); window.scrollTo(0, 0); };
+  const goHome = () => { setWeapon(null); setTab('home'); window.scrollTo(0, 0); };
   const changeTab = (t: Tab) => { setWeapon(null); setTab(t); window.scrollTo(0, 0); };
 
   return (
@@ -149,6 +172,14 @@ function App() {
         </div>
       )}
 
+      {/* Barre d'annonce saisonnière (en cadeau : message dédié) */}
+      {!weapon && !success.open && (
+        <AnnouncementBar
+          text={GIFT_ACTIVE && campaign.id !== 'christmas' ? ANNOUNCEMENTS.christmas : undefined}
+          icon={GIFT_ACTIVE && campaign.id !== 'christmas' ? 'gift' : undefined}
+        />
+      )}
+
       {/* Notification */}
       <div role="status" aria-live="polite" className={`fixed top-safe left-1/2 -translate-x-1/2 z-[110] mt-3 transition-all duration-300 ${toast ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3 pointer-events-none'}`}>
         <div className="bg-surface border border-accent/30 px-5 py-3 rounded-full shadow-card flex items-center gap-2.5">
@@ -161,10 +192,12 @@ function App() {
       {tab === 'home' && (
         <HomeScreen
           weapons={WEAPONS}
+          giftMode={GIFT_ACTIVE}
           onOpenWeapon={openWeapon}
           onAddToCart={handleAddToCart}
           onBuyNow={handleBuyNow}
           onGoArsenal={goArsenal}
+          onGoHome={goHome}
           onContact={() => setContactOpen(true)}
           onOpenLegal={() => setLegalOpen(true)}
         />

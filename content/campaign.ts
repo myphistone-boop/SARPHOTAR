@@ -103,23 +103,23 @@ export const CAMPAIGNS: Record<SeasonId, Campaign> = {
   /* ---------------------------------------------------------------- */
   late_summer: {
     id: 'late_summer',
-    badge: 'Les derniers beaux jours',
+    badge: 'Derniers beaux jours',
     badgeIcon: 'bolt',
     h1Lines: ['CHAQUE MOMENT'],
     h1Accent: 'DEVIENT UN DÉFI',
     h1Tail: "Le pistolet à eau électrique qui transforme chaque moment en défi.",
     subtitle:
-      "Rechargeable, fun et conçu pour des batailles d'eau complètement différentes. Profitez des derniers beaux jours pour passer à l'action.",
+      "Rechargeable, fun et conçu pour rendre les batailles d'eau encore plus intenses. Profitez des beaux jours tant qu'ils sont là.",
     benefits: CORE_BENEFITS,
     ctaPrimary: 'Découvrir NovElec™',
     ctaSecondary: 'Acheter maintenant',
     finalCta: {
-      title: 'Toujours prêt pour une dernière bataille ?',
-      subtitle: 'Découvrez NovElec™ et profitez des derniers beaux jours.',
+      title: 'Une dernière bataille avant l’automne ?',
+      subtitle: 'Découvrez NovElec™ pendant que les beaux jours sont là.',
       button: 'Découvrir NovElec™',
     },
     emailCapture: {
-      title: 'Une offre à ne pas manquer ?',
+      title: 'Une dernière bataille ? ⚡',
       subtitle: 'Restez au courant des prochaines offres Sarphotar.',
       button: "Je m'inscris",
     },
@@ -339,3 +339,63 @@ export const CAMPAIGNS: Record<SeasonId, Campaign> = {
 
 /** La campagne active. Une seule, toujours. */
 export const campaign: Campaign = CAMPAIGNS[CAMPAIGN_SEASON];
+
+/* ============================================================================
+ *  BARRE D'ANNONCE (haut de page)
+ *
+ *  Texte informatif, jamais une fausse urgence. Une phrase par saison.
+ *  Le visiteur peut la fermer ; elle reste discrète et ne recouvre rien.
+ * ========================================================================== */
+export const ANNOUNCEMENTS: Record<SeasonId, string> = {
+  late_summer: 'Les derniers beaux jours sont là — découvrez NovElec™',
+  autumn: 'Le mode challenge est activé',
+  halloween: 'Mode bataille activé — cette fois, personne ne ressort sec',
+  black_friday: 'Black Friday — offre exceptionnelle pendant toute la campagne',
+  christmas: 'Une idée cadeau qui sort de l’ordinaire',
+  evergreen: 'NovElec™ — le pistolet à eau électrique nouvelle génération',
+  pre_summer: 'La saison approche — équipez-vous avant tout le monde',
+  summer: 'La bataille d’eau change de niveau — découvrez NovElec™',
+};
+
+/* ============================================================================
+ *  CTA ALTERNATIF (A/B)
+ *
+ *  Variante du bouton principal, orientée envie plutôt que découverte.
+ *  Utilisée quand AB_HERO_CTA est activé (voir lib/ab.ts).
+ * ========================================================================== */
+export const CTA_ALT: Record<SeasonId, string> = {
+  late_summer: 'Je veux le mien',
+  autumn: 'Relever le défi',
+  halloween: 'Passer à l’action',
+  black_friday: 'Profiter de l’offre',
+  christmas: 'Offrir NovElec™',
+  evergreen: 'Je veux le mien',
+  pre_summer: 'Je veux le mien',
+  summer: 'Je veux le mien',
+};
+
+/* ============================================================================
+ *  MODE CADEAU
+ *
+ *  GIFT_MODE renforce le discours « idée cadeau » partout sur le site.
+ *  Il s'active de trois façons, combinées dans App.tsx :
+ *   1. GIFT_MODE = true ci-dessous (à passer à true en novembre/décembre) ;
+ *   2. automatiquement quand la campagne 'christmas' est active ;
+ *   3. ponctuellement via l'URL ?gift=1 (pour les publicités cadeau, sans
+ *      changer la campagne du site).
+ * ========================================================================== */
+export const GIFT_MODE = false;
+
+/** Phrase cadeau réutilisable (bénéfices, fiche, FAQ, publicités). */
+export const GIFT_LINE = 'Une idée cadeau originale pour ceux qui aiment les défis.';
+
+/** Bénéfice « idée cadeau », ajouté aux bénéfices quand le mode cadeau est actif. */
+export const GIFT_BENEFIT: Benefit = {
+  icon: 'gift',
+  label: 'Idée cadeau',
+  detail: GIFT_LINE,
+};
+
+/** Textes de la barre d'annonce et du CTA alternatif pour la campagne active. */
+export const announcement = ANNOUNCEMENTS[CAMPAIGN_SEASON];
+export const ctaAlt = CTA_ALT[CAMPAIGN_SEASON];

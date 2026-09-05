@@ -1,7 +1,7 @@
 import path from 'path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
-import { buildJsonLd, buildMetaTags, buildRobotsTxt, buildSitemap, seoTitle, seoDescription, assertPricesConsistent } from './tools/seo';
+import { buildJsonLd, buildMetaTags, buildRobotsTxt, buildSitemap, buildMerchantFeed, seoTitle, seoDescription, assertPricesConsistent } from './tools/seo';
 
 /**
  * Injecte les métadonnées SEO dans index.html et émet robots.txt / sitemap.xml.
@@ -35,6 +35,7 @@ function seoPlugin(): Plugin {
     generateBundle() {
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: buildRobotsTxt() });
       this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: buildSitemap() });
+      this.emitFile({ type: 'asset', fileName: 'merchant-feed.xml', source: buildMerchantFeed() });
     },
   };
 }

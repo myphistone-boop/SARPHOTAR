@@ -33,6 +33,11 @@ export function getConsent(): ConsentValue | null {
   }
 }
 
+/** Efface le choix de consentement : le bandeau réapparaîtra au prochain rendu. */
+export function resetConsent(): void {
+  try { localStorage.removeItem(KEY); } catch { /* mode privé */ }
+}
+
 export function setConsent(value: ConsentValue): void {
   try {
     localStorage.setItem(KEY, value);

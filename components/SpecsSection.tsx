@@ -50,7 +50,7 @@ export const SpecsSection: React.FC<{ productId: string; title?: string; classNa
 
       {facts?.boxContents && (
         <div className="mt-3 bg-surface border border-white/8 rounded-xl2 p-4 edge-top">
-          <div className="font-hud text-[10px] uppercase tracking-[0.18em] text-muted mb-2.5">Contenu du colis</div>
+          <div className="font-hud text-[10px] uppercase tracking-[0.18em] text-muted mb-2.5">Ce que vous recevez</div>
           <ul className="space-y-1.5">
             {facts.boxContents.map((c) => (
               <li key={c} className="flex items-start gap-2 text-[13px] text-ghost/85">

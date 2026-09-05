@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Weapon } from '../data/catalog';
 import { FAQ } from '../content/faq';
-import { campaign } from '../content/campaign';
+import { campaign, ctaAlt, GIFT_LINE } from '../content/campaign';
 import { SUPPORT, SHIPPING } from '../content/facts';
 import { StatTriplet } from '../components/StatBars';
 import { Button } from '../components/ui/Button';
@@ -13,19 +13,24 @@ import { BenefitsSection } from '../components/BenefitsSection';
 import { DemoSection } from '../components/DemoSection';
 import { ComparisonSection } from '../components/ComparisonSection';
 import { SpecsSection } from '../components/SpecsSection';
+import { HesitationSection } from '../components/HesitationSection';
+import { AB_HERO_CTA, getVariant, trackImpression } from '../lib/ab';
+import { resetConsent } from '../lib/consent';
 
 interface HomeScreenProps {
   weapons: Weapon[];
+  giftMode?: boolean;
   onOpenWeapon: (w: Weapon) => void;
   onAddToCart: (w: Weapon) => void;
   onBuyNow: (w: Weapon) => void;
   onGoArsenal: () => void;
+  onGoHome: () => void;
   onContact: () => void;
   onOpenLegal: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
-  weapons, onOpenWeapon, onAddToCart, onBuyNow, onGoArsenal, onContact, onOpenLegal,
+  weapons, giftMode = false, onOpenWeapon, onAddToCart, onBuyNow, onGoArsenal, onGoHome, onContact, onOpenLegal,
 }) => {
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const [featIdx, setFeatIdx] = useState(0);
@@ -33,6 +38,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const featured = weapons[featIdx] ?? weapons[0];
   const featPrev = () => setFeatIdx((i) => (i - 1 + count) % count);
   const featNext = () => setFeatIdx((i) => (i + 1) % count);
+
+  // CTA principal du hero : variante A/B (désactivée par défaut, voir lib/ab.ts).
+  const heroVariant = getVariant('hero_cta', AB_HERO_CTA);
+  const heroCtaLabel = heroVariant === 'B' ? ctaAlt : campaign.ctaPrimary;
+  useEffect(() => {
+    if (AB_HERO_CTA) trackImpression('hero_cta', heroVariant);
+  }, [heroVariant]);
+
+  // Mode cadeau : le hero met l'accent sur l'idée cadeau, sans changer le design.
+  const heroBadge = giftMode ? 'Idée cadeau' : campaign.badge;
+  const heroBadgeIcon = giftMode ? 'gift' : campaign.badgeIcon;
 
   return (
     <div className="screen-in pb-tabbar">
@@ -48,10 +64,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* barre de statut */}
         <header className="app-chrome absolute top-0 inset-x-0 z-20 pt-safe">
           <div className="max-w-2xl mx-auto flex items-center justify-between px-5 h-14">
-            <div className="flex items-center gap-2.5">
+            <button onClick={onGoHome} aria-label="Accueil Sarphotar" className="flex items-center gap-2.5 active:scale-95 transition-transform">
               <span className="grid place-items-center w-8 h-8 rounded-lg bg-ghost text-carbon font-display font-black italic text-lg leading-none">S</span>
               <span className="text-base font-black italic tracking-tight font-display text-ghost">SARPHOTAR™</span>
-            </div>
+            </button>
             <span className="flex items-center gap-1.5 font-hud text-[9px] tracking-[0.28em] text-accent">
               <Icon name="truck" size={12} strokeWidth={2} /> LIVRAISON OFFERTE
             </span>
@@ -59,10 +75,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </header>
 
         <div className="absolute bottom-0 inset-x-0 p-6 pb-9 z-10 max-w-2xl mx-auto animate-rise">
-          {/* badge de campagne */}
+          {/* badge de campagne (ou badge cadeau en mode cadeau) */}
           <span className="inline-flex items-center gap-2 mb-3.5 py-1.5 px-3 rounded-full border border-accent/30 bg-accent/5">
-            <Icon name={campaign.badgeIcon} size={11} strokeWidth={2.2} className="text-accent" />
-            <span className="font-hud text-[10px] uppercase tracking-[0.3em] text-accent">{campaign.badge}</span>
+            <Icon name={heroBadgeIcon} size={11} strokeWidth={2.2} className="text-accent" />
+            <span className="font-hud text-[10px] uppercase tracking-[0.3em] text-accent">{heroBadge}</span>
           </span>
 
           {/* Titre : bloc monumental + fin de phrase — le tout dans un seul h1,
@@ -78,6 +94,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </h1>
 
           <p className="text-[14px] text-ghost/60 mb-4 max-w-md leading-relaxed">{campaign.subtitle}</p>
+
+          {/* Note cadeau, en mode cadeau uniquement */}
+          {giftMode && (
+            <p className="flex items-center gap-1.5 text-[13px] text-accent/90 mb-4 max-w-md leading-snug">
+              <Icon name="gift" size={14} strokeWidth={2} className="shrink-0" />
+              {GIFT_LINE}
+            </p>
+          )}
 
           {/* bénéfices clés */}
           <ul className="flex items-center gap-x-4 gap-y-1.5 flex-wrap mb-5">
@@ -99,7 +123,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <div className="flex gap-3">
             <Button variant="accent" onClick={onGoArsenal} className="flex-1 !py-3.5">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
-              {campaign.ctaPrimary}
+              {heroCtaLabel}
             </Button>
             <Button variant="outline" onClick={() => onBuyNow(featured)} className="flex-1 !py-3.5">{campaign.ctaSecondary}</Button>
           </div>
@@ -252,6 +276,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
       </section>
 
+      {/* ─────────────────── VOUS HÉSITEZ ? ─────────────────── */}
+      <HesitationSection onCta={() => onOpenWeapon(featured)} />
+
       {/* ─────────────────── CTA FINAL ─────────────────── */}
       <section className="mt-12 px-5 max-w-2xl mx-auto">
         <div className="bg-surface border border-white/10 rounded-xl3 p-7 text-center edge-top shadow-card">
@@ -270,12 +297,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
         <p className="text-xs text-muted mb-5">Pistolets à eau électriques rechargeables</p>
 
-        <nav className="flex items-center justify-center gap-x-5 gap-y-2 flex-wrap mb-5">
+        <nav className="flex items-center justify-center gap-x-5 gap-y-2 flex-wrap mb-4">
           <button onClick={onContact} className="font-hud text-[10px] tracking-[0.2em] text-muted hover:text-accent transition-colors">CONTACT</button>
           <button onClick={onOpenLegal} className="font-hud text-[10px] tracking-[0.2em] text-muted hover:text-accent transition-colors">MENTIONS LÉGALES</button>
           <button onClick={onOpenLegal} className="font-hud text-[10px] tracking-[0.2em] text-muted hover:text-accent transition-colors">CGV</button>
+          <button onClick={onOpenLegal} className="font-hud text-[10px] tracking-[0.2em] text-muted hover:text-accent transition-colors">LIVRAISON &amp; RETOURS</button>
           <button onClick={onOpenLegal} className="font-hud text-[10px] tracking-[0.2em] text-muted hover:text-accent transition-colors">CONFIDENTIALITÉ</button>
+          <button onClick={() => { resetConsent(); location.reload(); }} className="font-hud text-[10px] tracking-[0.2em] text-muted hover:text-accent transition-colors">COOKIES</button>
         </nav>
+
+        <div className="mb-5"><PaymentRow /></div>
 
         <a href={`mailto:${SUPPORT.email}`} className="font-hud text-[10px] tracking-[0.2em] text-muted hover:text-accent transition-colors">{SUPPORT.email}</a>
         <p className="font-hud text-[9px] tracking-[0.2em] text-muted/60 mt-4">© {new Date().getFullYear()} SARPHOTAR™</p>
