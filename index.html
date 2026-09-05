@@ -50,6 +50,38 @@
       };
     </script>
 
+    <!-- ============ GOOGLE (GA4 + Google Ads) ============
+         Renseignez les identifiants ci-dessous pour activer le suivi Google.
+         Tout est deja cable dans l'application (view_item / add_to_cart /
+         begin_checkout / purchase, + la conversion d'achat Google Ads).
+
+         Ou trouver ces valeurs :
+         - GA4_ID  : Google Analytics > Admin > Flux de donnees > "ID de mesure" (G-XXXXXXXXXX)
+         - GADS_ID : Google Ads > Objectifs > Conversions > Balise Google (AW-XXXXXXXXXX)
+         - GADS_PURCHASE_LABEL : Google Ads > la conversion "Achat" > "Libelle de conversion"
+
+         Rien n'est charge sans consentement (art. 82 loi Informatique et Libertes),
+         ni tant que ces champs sont vides. -->
+    <script>
+      window.GA4_ID = "";               // <-- ex: "G-XXXXXXXXXX"
+      window.GADS_ID = "";              // <-- ex: "AW-XXXXXXXXXX"
+      window.GADS_PURCHASE_LABEL = "";  // <-- ex: "AbC-D_efG12hIjkLmn"
+
+      window.__sarphotarLoadGoogle = function () {
+        if (window.gtag || (!window.GA4_ID && !window.GADS_ID)) return;
+        var id = window.GA4_ID || window.GADS_ID;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        if (window.GA4_ID) window.gtag('config', window.GA4_ID);
+        if (window.GADS_ID) window.gtag('config', window.GADS_ID);
+      };
+    </script>
+
 
     <!--%SEO_JSONLD%-->
   </head>

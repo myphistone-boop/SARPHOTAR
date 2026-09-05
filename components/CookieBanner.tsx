@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getConsent, setConsent } from '../lib/consent';
+import { getConsent, setConsent, trackersConfigured } from '../lib/consent';
 
 /**
  * Bandeau de consentement.
@@ -15,8 +15,7 @@ export const CookieBanner: React.FC = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const pixelConfigured = Boolean(window.PIXEL_ID);
-    if (pixelConfigured && getConsent() === null) {
+    if (trackersConfigured() && getConsent() === null) {
       // Laisse la page s'afficher avant de solliciter le visiteur.
       const t = setTimeout(() => setVisible(true), 1200);
       return () => clearTimeout(t);

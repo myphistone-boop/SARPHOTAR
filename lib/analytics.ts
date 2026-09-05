@@ -29,4 +29,26 @@ export function track(event: string, params: Params = {}): void {
   }
 }
 
+/**
+ * Conversion Google Ads (distincte de l'événement GA4).
+ *
+ * Google Ads compte les achats via un événement `conversion` avec `send_to`
+ * pointant vers l'ID de la balise + le libellé de la conversion. Ne fait rien
+ * tant que GADS_ID et le libellé ne sont pas renseignés dans index.html.
+ */
+export function googleAdsConversion(params: Params = {}): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const w = window as any;
+    if (typeof w.gtag === 'function' && w.GADS_ID && w.GADS_PURCHASE_LABEL) {
+      w.gtag('event', 'conversion', {
+        send_to: `${w.GADS_ID}/${w.GADS_PURCHASE_LABEL}`,
+        ...params,
+      });
+    }
+  } catch {
+    /* never let analytics break the app */
+  }
+}
+
 export const money = (n: number) => Math.round(n * 100) / 100;

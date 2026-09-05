@@ -18,9 +18,20 @@ declare global {
     PIXEL_ID?: string;
     __sarphotarLoadPixel?: () => void;
     fbq?: (...args: unknown[]) => void;
+    // Google (GA4 + Google Ads)
+    GA4_ID?: string;
+    GADS_ID?: string;
+    GADS_PURCHASE_LABEL?: string;
+    __sarphotarLoadGoogle?: () => void;
     gtag?: (...args: unknown[]) => void;
     dataLayer?: unknown[];
   }
+}
+
+/** Vrai si au moins un traceur (Meta ou Google) est configuré. */
+export function trackersConfigured(): boolean {
+  if (typeof window === 'undefined') return false;
+  return Boolean(window.PIXEL_ID || window.GA4_ID || window.GADS_ID);
 }
 
 /** Choix déjà exprimé par le visiteur, ou null s'il ne s'est pas prononcé. */
@@ -52,6 +63,7 @@ export function loadTrackers(): void {
   if (typeof window === 'undefined') return;
   try {
     window.__sarphotarLoadPixel?.();
+    window.__sarphotarLoadGoogle?.();
   } catch {
     /* le suivi ne doit jamais casser la boutique */
   }

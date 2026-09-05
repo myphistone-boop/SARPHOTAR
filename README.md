@@ -110,8 +110,13 @@ l'en-tête `x-admin-token`. Le destinataire de `/api/contact` et
 
 ## Suivi & publicité
 
-- Pixel Meta : collez votre identifiant dans `window.PIXEL_ID` (`index.html`).
-  Il n'est chargé qu'après consentement du visiteur.
+- **Pixel Meta** : `window.PIXEL_ID` dans `index.html`.
+- **Google Analytics 4** : `window.GA4_ID` (`G-XXXXXXXXXX`) dans `index.html`.
+- **Google Ads** : `window.GADS_ID` (`AW-XXXXXXXXXX`) + `window.GADS_PURCHASE_LABEL`
+  (le libellé de la conversion « Achat ») dans `index.html`.
+  Où les trouver : Google Ads → Objectifs → Conversions → balise Google (AW-…),
+  puis la conversion « Achat » → libellé de conversion.
+- Aucun traceur n'est chargé sans le consentement du visiteur.
 - Événements câblés : `view_item`, `add_to_cart`, `begin_checkout`, `purchase`
   (avec valeur monétaire, nécessaire au calcul du ROAS).
 - Lien profond publicitaire : `?p=<id produit>` ouvre directement la fiche.

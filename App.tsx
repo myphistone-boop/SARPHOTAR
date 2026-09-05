@@ -14,7 +14,7 @@ import { StickyCta } from './components/StickyCta';
 import { CookieBanner } from './components/CookieBanner';
 import { EmailCapture } from './components/EmailCapture';
 import { AnnouncementBar } from './components/AnnouncementBar';
-import { track } from './lib/analytics';
+import { track, googleAdsConversion } from './lib/analytics';
 import { campaign, GIFT_MODE, ANNOUNCEMENTS } from './content/campaign';
 
 /** Clé de stockage du montant du panier, relu au retour de Stripe. */
@@ -101,11 +101,14 @@ function App() {
     setSuccess({ open: true, order });
     if (!alreadyTracked) {
       try { sessionStorage.setItem(dedupeKey, '1'); } catch { /* mode privé */ }
-      track('purchase', {
+      const purchaseParams = {
         transaction_id: order,
         currency: 'EUR',
         ...(Number.isFinite(value) && value! > 0 ? { value } : {}),
-      });
+      };
+      track('purchase', purchaseParams);
+      // Conversion Google Ads (ne fait rien tant que les IDs ne sont pas configurés).
+      googleAdsConversion(purchaseParams);
     }
     clearCart();
     window.history.replaceState({}, document.title, window.location.pathname);
