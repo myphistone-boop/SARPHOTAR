@@ -1,9 +1,12 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from '@vercel/analytics/react';
+import { initConsent } from './lib/consent';
 import './index.css';
+
+// Recharge les traceurs si le visiteur avait déjà donné son accord.
+initConsent();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
