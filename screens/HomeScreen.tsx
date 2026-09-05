@@ -144,6 +144,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <OfferBanner />
       </section>
 
+      {/* ───────── EN ACTION — vidéo remontée, vue tôt (trafic TikTok) ───────── */}
+      <DemoSection />
+
       {/* ─────────────────── PIÈCE MAÎTRESSE ─────────────────── */}
       <section className="px-5 mt-4 relative z-10 max-w-2xl mx-auto">
         <div className="flex items-center gap-3 mb-3">
@@ -204,9 +207,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
       {/* ─────────────────── BÉNÉFICES ─────────────────── */}
       <BenefitsSection />
-
-      {/* ─────────────────── DÉMONSTRATION ─────────────────── */}
-      <DemoSection />
 
       {/* ─────────────────── L'ARSENAL ─────────────────── */}
       <section className="mt-10 max-w-2xl mx-auto">
