@@ -72,7 +72,7 @@ export const CartScreen: React.FC<CartScreenProps> = ({ cart, total, checkingOut
               <div className="flex items-center justify-between mb-1"><span className="font-hud text-xs uppercase tracking-[0.2em] text-muted">Sous-total</span><span className="text-2xl font-black font-display text-ghost">{total.toFixed(2)}€</span></div>
               <p className="font-hud text-[9px] text-muted tracking-wider mb-4">Taxes et port calculés à l'étape suivante · Paiement Stripe sécurisé</p>
               <Button variant="accent" fullWidth onClick={onCheckout} disabled={checkingOut}>
-                {checkingOut ? 'Connexion Stripe…' : 'Procéder au paiement'}
+                {checkingOut ? 'Redirection en cours' : 'Procéder au paiement'}
               </Button>
               <PaymentRow className="mt-3 justify-center" />
               <Guarantee className="mt-2 justify-center" />

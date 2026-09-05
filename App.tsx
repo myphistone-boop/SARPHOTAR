@@ -117,7 +117,7 @@ function App() {
       notify("Paiement indisponible. Merci de réessayer.");
     } catch (e) {
       console.error('Network error:', e);
-      notify("Connexion impossible. Vérifiez votre réseau.");
+      notify("Une erreur est survenue, merci de réessayer.");
     }
     // On ne relâche l'écran de chargement qu'en cas d'échec : en cas de
     // succès la page est en train d'être remplacée par Stripe.
@@ -139,16 +139,12 @@ function App() {
 
   return (
     <div className="min-h-screen carbon text-ghost selection:bg-accent selection:text-carbon">
-      {/* Splash de démarrage */}
+      {/* Flash de marque à l'ouverture (pas de fausse barre de chargement) */}
       {booting && (
         <div className="fixed inset-0 z-[200] bg-carbon carbon grid place-items-center animate-fade">
-          <div className="flex flex-col items-center">
-            <div className="grid place-items-center w-16 h-16 rounded-2xl bg-ghost text-carbon font-display font-black italic text-4xl leading-none mb-5 shadow-glow animate-float">S</div>
-            <div className="font-display text-2xl font-black italic uppercase tracking-tight text-ghost mb-4">SARPHOTAR™</div>
-            <div className="w-40 h-1 bg-white/10 rounded-full overflow-hidden">
-              <div className="h-full bg-accent animate-boot-bar" />
-            </div>
-            <div className="font-hud text-[9px] tracking-[0.3em] text-muted mt-3">CHARGEMENT</div>
+          <div className="flex items-center gap-3">
+            <div className="grid place-items-center w-12 h-12 rounded-xl bg-ghost text-carbon font-display font-black italic text-2xl leading-none shadow-glow">S</div>
+            <div className="font-display text-2xl font-black italic uppercase tracking-tight text-ghost">SARPHOTAR™</div>
           </div>
         </div>
       )}
@@ -194,7 +190,7 @@ function App() {
         <div className="fixed inset-0 z-[120] bg-carbon/85 backdrop-blur-md grid place-items-center">
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin" />
-            <div className="font-hud text-ghost uppercase tracking-[0.25em] text-xs animate-pulse">Connexion Stripe…</div>
+            <div className="text-ghost/80 text-sm">Redirection vers le paiement sécurisé</div>
           </div>
         </div>
       )}

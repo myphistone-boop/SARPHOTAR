@@ -151,7 +151,7 @@ export const EmailCapture: React.FC<{ blocked?: boolean }> = ({ blocked = false 
             )}
 
             <Button type="submit" variant="accent" fullWidth disabled={status === 'sending' || !consent}>
-              {status === 'sending' ? 'Envoi…' : campaign.emailCapture.button}
+              {status === 'sending' ? 'Envoi en cours' : campaign.emailCapture.button}
             </Button>
           </form>
         )}

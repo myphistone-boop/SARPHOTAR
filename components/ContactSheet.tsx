@@ -132,7 +132,7 @@ export const ContactSheet: React.FC<ContactSheetProps> = ({ isOpen, onClose }) =
               )}
 
               <Button type="submit" variant="accent" fullWidth className="mt-1" disabled={status === 'sending'}>
-                {status === 'sending' ? 'Envoi…' : 'Envoyer'}
+                {status === 'sending' ? 'Envoi en cours' : 'Envoyer'}
               </Button>
             </form>
           )}

@@ -50,7 +50,6 @@ export default {
         'sheen': 'sheen 3.5s ease-in-out infinite',
         'scan': 'scan 3.2s linear infinite',
         'pulse-dot': 'pulseDot 2s ease-in-out infinite',
-        'boot-bar': 'bootBar 1s cubic-bezier(0.5,0,0.2,1) forwards',
       },
       keyframes: {
         float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
@@ -61,7 +60,6 @@ export default {
         sheen: { '0%,100%': { opacity: 0.0 }, '50%': { opacity: 0.5 } },
         scan: { '0%': { transform: 'translateY(-120%)' }, '100%': { transform: 'translateY(420%)' } },
         pulseDot: { '0%,100%': { opacity: 1, transform: 'scale(1)' }, '50%': { opacity: 0.4, transform: 'scale(0.7)' } },
-        bootBar: { '0%': { width: '0%' }, '100%': { width: '100%' } },
       },
     },
   },

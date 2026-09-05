@@ -53,7 +53,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <span className="text-base font-black italic tracking-tight font-display text-ghost">SARPHOTAR™</span>
             </div>
             <span className="flex items-center gap-1.5 font-hud text-[9px] tracking-[0.28em] text-accent">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-dot" /> ONLINE
+              <Icon name="truck" size={12} strokeWidth={2} /> LIVRAISON OFFERTE
             </span>
           </div>
         </header>
