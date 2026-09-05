@@ -57,10 +57,10 @@ export const StatBar: React.FC<StatBarProps> = ({ label, value, start, end, segm
   );
 };
 
-export const StatTriplet: React.FC<{ specs: { range: number; rate: number; capacity: number }; segments?: number; size?: 'sm' | 'md'; animateEntry?: boolean }> = ({ specs, segments, size, animateEntry }) => (
+export const StatTriplet: React.FC<{ specs: { range: number; rate: number; capacity: number }; segments?: number; size?: 'sm' | 'md'; animateEntry?: boolean; showValue?: boolean }> = ({ specs, segments, size, animateEntry, showValue = true }) => (
   <div className="space-y-2.5">
-    <StatBar label={STAT_META.range.label} value={specs.range} start={STAT_META.range.start} end={STAT_META.range.end} segments={segments} size={size} animateEntry={animateEntry} />
-    <StatBar label={STAT_META.rate.label} value={specs.rate} start={STAT_META.rate.start} end={STAT_META.rate.end} segments={segments} size={size} animateEntry={animateEntry} />
-    <StatBar label={STAT_META.capacity.label} value={specs.capacity} start={STAT_META.capacity.start} end={STAT_META.capacity.end} segments={segments} size={size} animateEntry={animateEntry} />
+    <StatBar label={STAT_META.range.label} value={specs.range} start={STAT_META.range.start} end={STAT_META.range.end} segments={segments} size={size} animateEntry={animateEntry} showValue={showValue} />
+    <StatBar label={STAT_META.rate.label} value={specs.rate} start={STAT_META.rate.start} end={STAT_META.rate.end} segments={segments} size={size} animateEntry={animateEntry} showValue={showValue} />
+    <StatBar label={STAT_META.capacity.label} value={specs.capacity} start={STAT_META.capacity.start} end={STAT_META.capacity.end} segments={segments} size={size} animateEntry={animateEntry} showValue={showValue} />
   </div>
 );

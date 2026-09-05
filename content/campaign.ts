@@ -24,6 +24,8 @@ export type IconName =
   | 'bolt' | 'drop' | 'battery' | 'gift' | 'lock' | 'truck'
   | 'return' | 'chat' | 'target' | 'trophy' | 'snow' | 'sun';
 
+import { PRODUCT_FACTS } from './facts';
+
 export type SeasonId =
   | 'late_summer'
   | 'autumn'
@@ -75,10 +77,22 @@ export interface Campaign {
   adAngles: string[];
 }
 
-/** Bénéfices produit communs — formulés sans chiffre non confirmé. */
+/**
+ * Libellé du bénéfice « portée ».
+ *
+ * Si une portée chiffrée est confirmée dans content/facts.ts, on l'affiche
+ * telle quelle avec son astérisque de renvoi vers les conditions de mesure.
+ * Sinon on retombe sur une formulation qualitative, sans chiffre inventé.
+ */
+function rangeBenefitLabel(): string {
+  const range = PRODUCT_FACTS['pistol-novelec']?.range;
+  return range ? `${range.value}*` : 'Grande portée';
+}
+
+/** Bénéfices produit communs. Aucun chiffre non confirmé. */
 const CORE_BENEFITS: Benefit[] = [
   { icon: 'bolt', label: 'Tir électrique', detail: "Une expérience électrique différente d'un pistolet classique." },
-  { icon: 'drop', label: 'Grande portée', detail: 'Un jet franc, qui porte loin et reste précis.' },
+  { icon: 'drop', label: rangeBenefitLabel(), detail: 'Un jet franc, qui porte loin et reste précis.' },
   { icon: 'battery', label: 'Rechargeable', detail: 'Rechargez-le et repartez pour une nouvelle partie.' },
 ];
 

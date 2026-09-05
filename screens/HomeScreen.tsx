@@ -89,6 +89,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             ))}
           </ul>
 
+          {/* Renvoi de l'astérisque des bénéfices chiffrés */}
+          {campaign.benefits.some((b) => b.label.includes('*')) && (
+            <p className="font-hud text-[8px] tracking-wide text-ghost/35 -mt-3 mb-4">
+              * Portée maximale mesurée en conditions optimales.
+            </p>
+          )}
+
           <div className="flex gap-3">
             <Button variant="accent" onClick={onGoArsenal} className="flex-1 !py-3.5">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
@@ -142,7 +149,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <button onClick={() => onOpenWeapon(featured)} className="block w-full text-left">
               <h2 className="text-3xl font-black italic uppercase font-display text-ghost leading-none mb-1">{featured.name}</h2>
               <p className="font-hud text-[10px] tracking-[0.2em] text-muted uppercase mb-4">{featured.tagline}</p>
-              <StatTriplet specs={featured.specs} />
+              <StatTriplet specs={featured.specs} showValue={false} />
               <p className="font-hud text-[9px] text-muted/60 tracking-wide mt-2">Indice comparatif entre les modèles de la gamme.</p>
             </button>
             <div className="flex items-baseline gap-2 mt-4 mb-3">
