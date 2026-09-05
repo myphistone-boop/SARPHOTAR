@@ -10,7 +10,11 @@ import { HelpScreen } from './screens/HelpScreen';
 import { SuccessScreen } from './screens/SuccessScreen';
 import { ContactSheet } from './components/ContactSheet';
 import { LegalSheet } from './components/LegalSheet';
+import { StickyCta } from './components/StickyCta';
 import { track } from './lib/analytics';
+
+/** Clé de stockage du montant du panier, relu au retour de Stripe. */
+const PENDING_VALUE_KEY = 'sarphotar_pending_order_value';
 
 function App() {
   const [tab, setTab] = useState<Tab>('home');
@@ -25,13 +29,13 @@ function App() {
 
   const { addToCart, removeFromCart, increment, decrement, clearCart, count, cart, total } = useCart();
 
-  // brief boot splash (kept short so content shows fast)
+  // Splash court : le contenu doit apparaître vite.
   useEffect(() => {
     const t = setTimeout(() => setBooting(false), 500);
     return () => clearTimeout(t);
   }, []);
 
-  // ?ref capture
+  // Capture du tag d'affiliation ?ref, conservé le temps de la session.
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     const ref = q.get('ref');
@@ -39,16 +43,48 @@ function App() {
     else { const s = sessionStorage.getItem('ref'); if (s) setRefTag(s); }
   }, []);
 
-  // ?payment_success handling (Stripe success_url)
+  /**
+   * Lien profond depuis une publicité : ?p=<id produit> ouvre directement la
+   * fiche concernée. Permet à chaque campagne d'atterrir sur le produit
+   * qu'elle met en avant plutôt que sur la page d'accueil générique.
+   */
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
-    if (q.get('payment_success') === 'true') {
-      const order = q.get('order');
-      setSuccess({ open: true, order });
-      track('purchase', { transaction_id: order, currency: 'EUR' });
-      clearCart();
-      window.history.replaceState({}, document.title, window.location.pathname);
+    const pid = q.get('p');
+    if (!pid) return;
+    const found = WEAPONS.find((w) => w.id === pid);
+    if (found) {
+      setWeapon(found);
+      track('view_item', {
+        currency: 'EUR',
+        value: found.price,
+        items: [{ item_id: found.id, item_name: found.name, price: found.price }],
+      });
     }
+  }, []);
+
+  // Retour depuis Stripe Checkout (success_url).
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get('payment_success') !== 'true') return;
+
+    const order = q.get('order');
+
+    // Le montant a été mémorisé avant la redirection vers Stripe : sans lui,
+    // l'événement d'achat partirait sans valeur et Meta/GA4 ne pourraient
+    // calculer ni ROAS ni enchères optimisées.
+    const stored = sessionStorage.getItem(PENDING_VALUE_KEY);
+    const value = stored ? Number(stored) : undefined;
+    sessionStorage.removeItem(PENDING_VALUE_KEY);
+
+    setSuccess({ open: true, order });
+    track('purchase', {
+      transaction_id: order,
+      currency: 'EUR',
+      ...(Number.isFinite(value) && value! > 0 ? { value } : {}),
+    });
+    clearCart();
+    window.history.replaceState({}, document.title, window.location.pathname);
   }, [clearCart]);
 
   const notify = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2600); };
@@ -59,9 +95,14 @@ function App() {
     track('add_to_cart', { currency: 'EUR', value: w.price, items: [{ item_id: w.id, item_name: w.name, price: w.price }] });
   };
 
-  const processCheckout = useCallback(async (items: { key: string; quantity: number }[]) => {
+  const processCheckout = useCallback(async (items: { key: string; quantity: number }[], value: number) => {
     setCheckingOut(true);
-    track('begin_checkout', { currency: 'EUR', num_items: items.reduce((a, i) => a + i.quantity, 0) });
+    sessionStorage.setItem(PENDING_VALUE_KEY, String(value));
+    track('begin_checkout', {
+      currency: 'EUR',
+      value,
+      num_items: items.reduce((a, i) => a + i.quantity, 0),
+    });
     try {
       const res = await fetch('/api/create-checkout-session', {
         method: 'POST',
@@ -69,14 +110,23 @@ function App() {
         body: JSON.stringify({ items, ref: refTag }),
       });
       const data = await res.json();
-      if (data.url) window.location.href = data.url;
-      else { console.error('Checkout error:', data.error); alert("Erreur lors de l'initialisation du paiement. Veuillez réessayer."); }
-    } catch (e) { console.error('Network error:', e); alert('Une erreur est survenue.'); }
-    finally { setCheckingOut(false); }
+      if (data.url) { window.location.href = data.url; return; }
+      console.error('Checkout error:', data.error);
+      notify("Paiement indisponible. Merci de réessayer.");
+    } catch (e) {
+      console.error('Network error:', e);
+      notify("Connexion impossible. Vérifiez votre réseau.");
+    }
+    // On ne relâche l'écran de chargement qu'en cas d'échec : en cas de
+    // succès la page est en train d'être remplacée par Stripe.
+    setCheckingOut(false);
   }, [refTag]);
 
-  const handleBuyNow = (w: Weapon) => processCheckout([{ key: w.id, quantity: 1 }]);
-  const handleCheckoutFromCart = () => { if (count === 0) return; processCheckout(cart.map((i) => ({ key: i.id, quantity: i.quantity }))); };
+  const handleBuyNow = (w: Weapon) => processCheckout([{ key: w.id, quantity: 1 }], w.price);
+  const handleCheckoutFromCart = () => {
+    if (count === 0) return;
+    processCheckout(cart.map((i) => ({ key: i.id, quantity: i.quantity })), total);
+  };
 
   const openWeapon = (w: Weapon) => {
     setWeapon(w);
@@ -87,7 +137,7 @@ function App() {
 
   return (
     <div className="min-h-screen carbon text-ghost selection:bg-accent selection:text-carbon">
-      {/* Boot splash */}
+      {/* Splash de démarrage */}
       {booting && (
         <div className="fixed inset-0 z-[200] bg-carbon carbon grid place-items-center animate-fade">
           <div className="flex flex-col items-center">
@@ -96,26 +146,36 @@ function App() {
             <div className="w-40 h-1 bg-white/10 rounded-full overflow-hidden">
               <div className="h-full bg-accent animate-boot-bar" />
             </div>
-            <div className="font-hud text-[9px] tracking-[0.3em] text-muted mt-3">INITIALISATION DE L'ARSENAL</div>
+            <div className="font-hud text-[9px] tracking-[0.3em] text-muted mt-3">CHARGEMENT</div>
           </div>
         </div>
       )}
 
-      {/* Toast */}
-      <div className={`fixed top-safe left-1/2 -translate-x-1/2 z-[110] mt-3 transition-all duration-300 ${toast ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3 pointer-events-none'}`}>
+      {/* Notification */}
+      <div role="status" aria-live="polite" className={`fixed top-safe left-1/2 -translate-x-1/2 z-[110] mt-3 transition-all duration-300 ${toast ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3 pointer-events-none'}`}>
         <div className="bg-surface border border-accent/30 px-5 py-3 rounded-full shadow-card flex items-center gap-2.5">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-accent"><polyline points="20 6 9 17 4 12" /></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-accent" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
           <span className="font-hud text-xs uppercase tracking-wider text-ghost">{toast}</span>
         </div>
       </div>
 
-      {/* Tab screens */}
-      {tab === 'home' && <HomeScreen weapons={WEAPONS} onOpenWeapon={openWeapon} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} onGoArsenal={goArsenal} onContact={() => setContactOpen(true)} />}
+      {/* Écrans */}
+      {tab === 'home' && (
+        <HomeScreen
+          weapons={WEAPONS}
+          onOpenWeapon={openWeapon}
+          onAddToCart={handleAddToCart}
+          onBuyNow={handleBuyNow}
+          onGoArsenal={goArsenal}
+          onContact={() => setContactOpen(true)}
+          onOpenLegal={() => setLegalOpen(true)}
+        />
+      )}
       {tab === 'arsenal' && <ArsenalScreen weapons={WEAPONS} onOpenWeapon={openWeapon} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} />}
       {tab === 'cart' && <CartScreen cart={cart} total={total} checkingOut={checkingOut} onRemove={removeFromCart} onInc={increment} onDec={decrement} onCheckout={handleCheckoutFromCart} onGoArsenal={goArsenal} />}
       {tab === 'help' && <HelpScreen onContact={() => setContactOpen(true)} onOpenLegal={() => setLegalOpen(true)} />}
 
-      {/* Weapon inspector overlay */}
+      {/* Fiche produit */}
       {weapon && (
         <WeaponScreen
           weapon={weapon}
@@ -127,7 +187,7 @@ function App() {
         />
       )}
 
-      {/* Checkout overlay */}
+      {/* Redirection paiement */}
       {checkingOut && (
         <div className="fixed inset-0 z-[120] bg-carbon/85 backdrop-blur-md grid place-items-center">
           <div className="flex flex-col items-center gap-4">
@@ -137,14 +197,16 @@ function App() {
         </div>
       )}
 
-      {/* Success */}
       {success.open && <SuccessScreen orderNumber={success.order} onClose={() => setSuccess({ open: false, order: null })} />}
 
-      {/* Sheets */}
       <ContactSheet isOpen={contactOpen} onClose={() => setContactOpen(false)} />
       <LegalSheet isOpen={legalOpen} onClose={() => setLegalOpen(false)} />
 
-      {/* Bottom navigation */}
+      {/* CTA persistant — accueil uniquement, au-dessus de la barre d'onglets */}
+      {tab === 'home' && !weapon && !success.open && !contactOpen && !legalOpen && (
+        <StickyCta onClick={goArsenal} />
+      )}
+
       {!weapon && !success.open && <TabBar active={tab} cartCount={count} onChange={changeTab} />}
     </div>
   );

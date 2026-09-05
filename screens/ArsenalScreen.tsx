@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Weapon } from '../data/catalog';
 import { StatTriplet } from '../components/StatBars';
-import { DiscountBadge } from '../components/Trust';
+import { DiscountBadge, PreviousPrice } from '../components/Trust';
 
 interface ArsenalScreenProps {
   weapons: Weapon[];
@@ -45,7 +45,7 @@ export const ArsenalScreen: React.FC<ArsenalScreenProps> = ({ weapons, onOpenWea
           <div key={w.id} className="bg-surface border border-white/10 rounded-xl2 overflow-hidden shadow-card edge-top animate-rise" style={{ animationDelay: `${idx * 60}ms` }}>
             <div className="flex items-center gap-2 px-4 pt-3.5">
               <span className="font-hud text-[9px] font-semibold tracking-[0.25em] px-2 py-1 rounded" style={{ color: w.meta.rarityColor, background: `${w.meta.rarityColor}1A`, border: `1px solid ${w.meta.rarityColor}44` }}>{w.meta.rarity}</span>
-              <DiscountBadge price={w.price} original={w.originalPrice} />
+              <DiscountBadge productId={w.id} price={w.price} />
               <span className="ml-auto font-hud text-[9px] tracking-[0.2em] text-muted">{w.meta.klass} · NIV {String(idx + 1).padStart(2, '0')}</span>
             </div>
 
@@ -66,7 +66,7 @@ export const ArsenalScreen: React.FC<ArsenalScreenProps> = ({ weapons, onOpenWea
             <div className="px-4 py-4">
               <div className="flex items-baseline gap-2 mb-3">
                 <span className="text-2xl font-black font-display text-ghost">{w.price}€</span>
-                {w.originalPrice && <span className="text-sm text-muted line-through decoration-danger decoration-2">{w.originalPrice}€</span>}
+                <PreviousPrice productId={w.id} price={w.price} className="text-sm decoration-2" />
                 <span className="ml-auto flex items-center gap-1.5 font-hud text-[9px] tracking-widest text-good"><span className="w-1.5 h-1.5 rounded-full bg-good animate-pulse-dot" /> EN STOCK</span>
               </div>
               <div className="grid grid-cols-[1fr_1.5fr] gap-2">
