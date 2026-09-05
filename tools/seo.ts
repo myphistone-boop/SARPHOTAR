@@ -8,12 +8,41 @@
  */
 
 import { PRODUCTS } from '../constants';
+import { OFFERS } from '../api/stripe-config';
 import { campaign } from '../content/campaign';
 import { FAQ } from '../content/faq';
 import { REVIEWS, averageRating } from '../content/reviews';
 import { LEGAL_ENTITY, SHIPPING, RETURNS } from '../content/facts';
 
 const SITE = LEGAL_ENTITY.siteUrl; // https://www.sarphotar.fr
+
+/**
+ * Garde-fou de cohérence des prix.
+ *
+ * Les prix affichés (constants.ts) et les montants de bootstrap Stripe
+ * (api/stripe-config.ts) doivent rester identiques. Ils avaient divergé —
+ * le site annonçait 34,99 € quand Stripe était configuré à 19,99 €.
+ * Le build échoue désormais plutôt que de publier l'incohérence.
+ */
+export function assertPricesConsistent(): void {
+  const errors: string[] = [];
+  for (const p of PRODUCTS) {
+    const offer = OFFERS.find((o) => o.key === p.id);
+    if (!offer) {
+      errors.push(`${p.id} : aucune offre correspondante dans api/stripe-config.ts`);
+      continue;
+    }
+    const cents = Math.round(p.price * 100);
+    if (cents !== offer.amount) {
+      errors.push(`${p.id} : ${p.price} € affiché mais ${offer.amount / 100} € dans stripe-config`);
+    }
+  }
+  if (errors.length > 0) {
+    throw new Error(
+      'Incohérence de prix entre constants.ts et api/stripe-config.ts :\n  - ' + errors.join('\n  - ')
+    );
+  }
+}
 
 /** Titre et description construits sur la campagne active. */
 export const seoTitle = 'Pistolet à eau électrique rechargeable | Sarphotar™';

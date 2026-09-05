@@ -1,7 +1,7 @@
 import path from 'path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
-import { buildJsonLd, buildMetaTags, buildRobotsTxt, buildSitemap, seoTitle, seoDescription } from './tools/seo';
+import { buildJsonLd, buildMetaTags, buildRobotsTxt, buildSitemap, seoTitle, seoDescription, assertPricesConsistent } from './tools/seo';
 
 /**
  * Injecte les métadonnées SEO dans index.html et émet robots.txt / sitemap.xml.
@@ -14,6 +14,10 @@ import { buildJsonLd, buildMetaTags, buildRobotsTxt, buildSitemap, seoTitle, seo
 function seoPlugin(): Plugin {
   return {
     name: 'sarphotar-seo',
+    buildStart() {
+      // Un prix incohérent doit bloquer le déploiement, pas partir en production.
+      assertPricesConsistent();
+    },
     transformIndexHtml(html) {
       const jsonLd = buildJsonLd()
         .map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`)
