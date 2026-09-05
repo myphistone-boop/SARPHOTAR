@@ -2,6 +2,7 @@ import React from 'react';
 import { previousPriceFor } from '../content/offer';
 import { SHIPPING, RETURNS, WARRANTY, SUPPORT, QUALITY, PRODUCT_FACTS } from '../content/facts';
 import { Icon } from './Icon';
+import { euro } from '../lib/format';
 
 /**
  * Badge de réduction.
@@ -29,7 +30,7 @@ export const DiscountBadge: React.FC<{ productId: string; price: number; classNa
 export const PreviousPrice: React.FC<{ productId: string; price: number; className?: string }> = ({ productId, price, className = '' }) => {
   const previous = previousPriceFor(productId);
   if (previous === null || previous <= price) return null;
-  return <span className={`text-muted line-through decoration-danger ${className}`}>{previous}€</span>;
+  return <span className={`text-muted line-through decoration-danger ${className}`}>{euro(previous)}</span>;
 };
 
 /* ---------------- Logos de paiement (inchangés) ---------------- */

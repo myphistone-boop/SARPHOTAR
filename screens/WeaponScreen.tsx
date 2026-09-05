@@ -7,6 +7,7 @@ import { DiscountBadge, PreviousPrice, PaymentRow, Guarantee } from '../componen
 import { OfferStrip } from '../components/OfferBanner';
 import { ReviewCard } from '../components/ReviewsPill';
 import { SpecsSection } from '../components/SpecsSection';
+import { euro } from '../lib/format';
 
 interface WeaponScreenProps {
   weapon: Weapon;
@@ -61,7 +62,7 @@ export const WeaponScreen: React.FC<WeaponScreenProps> = ({ weapon, weapons, onB
                     <button key={w.id} onClick={() => { onSwitch(w); setSwitcher(false); }} className={`w-full flex items-center gap-3 p-2.5 text-left border-b border-white/5 last:border-0 ${w.id === weapon.id ? 'bg-white/10' : 'hover:bg-white/5'}`}>
                       <div className="w-11 h-11 bg-black/40 rounded-lg p-1 grid place-items-center border border-white/5"><img src={w.image} alt="" loading="lazy" className="w-full h-full object-contain" /></div>
                       <div className="min-w-0"><div className="text-sm font-black italic uppercase font-display text-ghost truncate">{w.name}</div><div className="font-hud text-[9px] text-muted tracking-wider">{w.meta.klass}</div></div>
-                      <span className="ml-auto font-hud text-sm text-accent">{w.price}€</span>
+                      <span className="ml-auto font-hud text-sm text-accent">{euro(w.price)}</span>
                     </button>
                   ))}
                 </div>
@@ -93,7 +94,7 @@ export const WeaponScreen: React.FC<WeaponScreenProps> = ({ weapon, weapons, onB
               <div>
                 <span className="font-hud text-[10px] uppercase text-muted tracking-[0.2em] block mb-1">Prix unitaire</span>
                 <div className="flex items-baseline gap-2.5">
-                  <span className="text-4xl font-black font-display text-ghost leading-none">{weapon.price}€</span>
+                  <span className="text-4xl font-black font-display text-ghost leading-none">{euro(weapon.price)}</span>
                   <PreviousPrice productId={weapon.id} price={weapon.price} className="text-base decoration-2" />
                   <DiscountBadge productId={weapon.id} price={weapon.price} />
                 </div>
@@ -175,7 +176,7 @@ export const WeaponScreen: React.FC<WeaponScreenProps> = ({ weapon, weapons, onB
           <div className="flex flex-col shrink-0">
             <span className="font-hud text-[9px] text-muted uppercase tracking-wider truncate max-w-[90px]">{weapon.name}</span>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-xl font-black font-display text-ghost">{weapon.price}€</span>
+              <span className="text-xl font-black font-display text-ghost">{euro(weapon.price)}</span>
               <PreviousPrice productId={weapon.id} price={weapon.price} className="text-[11px]" />
             </div>
           </div>

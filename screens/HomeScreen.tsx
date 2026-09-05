@@ -16,6 +16,7 @@ import { SpecsSection } from '../components/SpecsSection';
 import { HesitationSection } from '../components/HesitationSection';
 import { AB_HERO_CTA, getVariant, trackImpression } from '../lib/ab';
 import { resetConsent } from '../lib/consent';
+import { euro } from '../lib/format';
 
 interface HomeScreenProps {
   weapons: Weapon[];
@@ -182,7 +183,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <p className="font-hud text-[9px] text-muted/60 tracking-wide mt-2">Indice comparatif entre les modèles de la gamme.</p>
             </button>
             <div className="flex items-baseline gap-2 mt-4 mb-3">
-              <span className="text-2xl font-black font-display text-ghost">{featured.price}€</span>
+              <span className="text-2xl font-black font-display text-ghost">{euro(featured.price)}</span>
               <PreviousPrice productId={featured.id} price={featured.price} className="text-sm" />
               <span className="ml-auto flex items-center gap-1.5 font-hud text-[9px] tracking-widest text-good"><span className="w-1.5 h-1.5 rounded-full bg-good animate-pulse-dot" /> EN STOCK</span>
             </div>
@@ -227,7 +228,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 </div>
               </button>
               <div className="flex items-center justify-between px-3 pb-3 pt-1">
-                <span className="font-hud text-sm text-accent">{w.price}€</span>
+                <span className="font-hud text-sm text-accent">{euro(w.price)}</span>
                 <button onClick={() => onAddToCart(w)} aria-label={`Ajouter ${w.name} au panier`} className="grid place-items-center w-7 h-7 rounded-md bg-white/5 border border-white/10 text-ghost hover:border-accent hover:text-accent transition-colors">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                 </button>

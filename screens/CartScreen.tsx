@@ -2,6 +2,7 @@ import React from 'react';
 import { CartItem } from '../types';
 import { Button } from '../components/ui/Button';
 import { PaymentRow, Guarantee } from '../components/Trust';
+import { euro } from '../lib/format';
 
 interface CartScreenProps {
   cart: CartItem[];
@@ -45,7 +46,7 @@ export const CartScreen: React.FC<CartScreenProps> = ({ cart, total, checkingOut
                     <div>
                       <div className="flex justify-between items-start gap-3">
                         <h3 className="text-sm font-black uppercase font-display text-ghost leading-tight">{item.name}</h3>
-                        <span className="text-sm font-bold text-ghost whitespace-nowrap">{(item.price * item.quantity).toFixed(2)}€</span>
+                        <span className="text-sm font-bold text-ghost whitespace-nowrap">{euro(item.price * item.quantity)}</span>
                       </div>
                       <p className="font-hud text-[10px] text-muted uppercase tracking-wider mt-1">{item.tagline}</p>
                     </div>
@@ -85,7 +86,7 @@ export const CartScreen: React.FC<CartScreenProps> = ({ cart, total, checkingOut
             )}
 
             <div className="mt-4 bg-surface border border-white/10 rounded-xl2 p-5 edge-top">
-              <div className="flex items-center justify-between mb-1"><span className="font-hud text-xs uppercase tracking-[0.2em] text-muted">Sous-total</span><span className="text-2xl font-black font-display text-ghost">{total.toFixed(2)}€</span></div>
+              <div className="flex items-center justify-between mb-1"><span className="font-hud text-xs uppercase tracking-[0.2em] text-muted">Sous-total</span><span className="text-2xl font-black font-display text-ghost">{euro(total)}</span></div>
               <p className="font-hud text-[9px] text-muted tracking-wider mb-4">Livraison offerte · réception sous 10 à 15 jours · paiement sécurisé par Stripe</p>
               <Button variant="accent" fullWidth onClick={onCheckout} disabled={checkingOut}>
                 {checkingOut ? 'Redirection en cours' : 'Procéder au paiement'}

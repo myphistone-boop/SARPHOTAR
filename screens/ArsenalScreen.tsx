@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Weapon } from '../data/catalog';
 import { StatTriplet } from '../components/StatBars';
 import { DiscountBadge, PreviousPrice } from '../components/Trust';
+import { euro } from '../lib/format';
 
 interface ArsenalScreenProps {
   weapons: Weapon[];
@@ -65,7 +66,7 @@ export const ArsenalScreen: React.FC<ArsenalScreenProps> = ({ weapons, onOpenWea
 
             <div className="px-4 py-4">
               <div className="flex items-baseline gap-2 mb-3">
-                <span className="text-2xl font-black font-display text-ghost">{w.price}€</span>
+                <span className="text-2xl font-black font-display text-ghost">{euro(w.price)}</span>
                 <PreviousPrice productId={w.id} price={w.price} className="text-sm decoration-2" />
                 <span className="ml-auto flex items-center gap-1.5 font-hud text-[9px] tracking-widest text-good"><span className="w-1.5 h-1.5 rounded-full bg-good animate-pulse-dot" /> EN STOCK</span>
               </div>
