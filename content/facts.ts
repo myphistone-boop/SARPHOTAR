@@ -271,15 +271,15 @@ export const LEGAL_ENTITY = {
   // À CONFIRMER — toutes les valeurs ci-dessous doivent venir de votre Kbis.
   // Tant qu'elles sont `null`, l'onglet « Mentions légales » affiche un
   // encart d'avertissement au lieu d'informations inventées.
-  companyName: null as string | null,       // Raison sociale exacte
-  legalForm: null as string | null,         // SASU, EURL, micro-entreprise…
+  companyName: 'Brahim Sahoui' as string | null,        // Entrepreneur individuel
+  legalForm: 'Entrepreneur individuel' as string | null,
   capital: null as string | null,           // Capital social (sociétés uniquement)
-  siret: null as string | null,             // SIRET (14 chiffres)
+  siret: '980 655 351 00016' as string | null,
   vatNumber: null as string | null,         // TVA intracommunautaire
   rcs: null as string | null,               // Ville + numéro RCS
-  address: null as string | null,           // Siège social complet
+  address: '165 rue de Charonne, 75011 Paris' as string | null,
   phone: null as string | null,             // Facultatif mais recommandé
-  publicationDirector: null as string | null, // Directeur de la publication
+  publicationDirector: 'Brahim Sahoui' as string | null,
 
   /** Hébergeur — connu et vérifié (le site est déployé sur Vercel). */
   host: {
